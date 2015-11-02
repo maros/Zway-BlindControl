@@ -14,6 +14,7 @@
       "fields" : {
           "shade_active": {
               "label": "__shade_active_label__",
+              "helper": "__shade_active_helper__",
               "order": 1
           },
           "shade_rules": {
@@ -21,27 +22,102 @@
               "items": {
                   "fields": {
                       "temperature_outside": {
-                         "label": "__temperature_outside_label__"
+                         "label": "__temperature_outside_label__",
+                         "helper": "__temperature_outside_shade_helper__"
                       },
                       "temperature_inside": {
+                          "label": "__temperature_inside_label__",
+                          "helper": "__temperature_inside_shade_helper__"
                       },
-                      "azimuth_low": {
+                      "azimuth_left": {
+                          "label": "__azimuth_left_label__"
                       },
-                      "azimuth_high": {
+                      "azimuth_right": {
+                          "label": "__azimuth_right_label__",
+                          "helper": "__azimuth_helper__"
+                      },
+                      "sun_uv": {
+                          "label": "__sun_uv_label__",
+                          "helper": "__sun_uv_helper__"
                       },
                       "altitude": {
+                          "label": "__altitude_label__",
+                          "helper": "__altitude_shade_helper__"
                       },
                       "devices": {
+                          "label": "__devices_label__",
+                          "fields" : {
+                              "item" : {
+                                 "datasource" : "namespaces",
+                                 "field" : "devices",
+                                 "optionLabels" : "namespaces:devices_switchMultilevel:deviceName",
+                                 "type" : "select"
+                              }
+                          }
+                      },
+                      "position": {
+                          "label": "__position_label__"
                       }
                   }
               }
           },
           "insulation_active": {
               "label": "__insulation_active_label__",
+              "helper": "__insulation_active_helper__",
               "order": 3
           },
           "insulation_rules": {
-              "order": 4
+              "order": 4,
+              "items": {
+                  "fields": {
+                      "temperature_outside": {
+                          "label": "__temperature_outside_label__",
+                          "helper": "__temperature_outside_insulation_helper__"
+                       },
+                       "altitude": {
+                           "label": "__altitude_label__",
+                           "helper": "__altitude_insulation_helper__"
+                       },
+                       "devices": {
+                           "label": "__devices_label__",
+                           "fields" : {
+                               "item" : {
+                                  "datasource" : "namespaces",
+                                  "field" : "devices",
+                                  "optionLabels" : "namespaces:devices_switchMultilevel:deviceName",
+                                  "type" : "select"
+                               }
+                           }
+                       },
+                       "position": {
+                           "label": "__position_label__"
+                       }
+                  }
+              }
+          },
+          "uv_sensor": {
+              "order": 5,
+              "label": "__uv_sensor_label__",
+              "datasource" : "namespaces",
+              "field" : "devices",
+              "optionLabels" : "namespaces:devices_sensorMultilevel:deviceName",
+              "type" : "select"
+          },
+          "temperature_outside_sensor": {
+              "order": 6,
+              "label": "__temperature_outside_sensor_label__",
+              "datasource" : "namespaces",
+              "field" : "devices",
+              "optionLabels" : "namespaces:devices_sensorMultilevel:deviceName",
+              "type" : "select"
+          },
+          "temperature_inside_sensor": {
+              "order": 7,
+              "label": "__temperature_inside_sensor_label__",
+              "datasource" : "namespaces",
+              "field" : "devices",
+              "optionLabels" : "namespaces:devices_sensorMultilevel:deviceName",
+              "type" : "select"
           }
       }
    },
@@ -51,8 +127,8 @@
    },
    "schema" : {
       "dependencies": {
-          "shade_rules": ["shade_active"],
-          "insulation_rules": ["insulation_active"],
+          "shade_rules": "shade_active",
+          "insulation_rules": "insulation_active"
       },
       "properties" : {
           "shade_active": {
@@ -64,6 +140,7 @@
              "default": false
           },
           "shade_rules": {
+              "dependencies" : "shade_active",
               "minItem": 1,
               "type": "array",
               "items": {
@@ -75,22 +152,29 @@
                       "temperature_inside": {
                          "type": "number"
                       },
-                      "azimuth_low": {
+                      "azimuth_left": {
                          "type": "number",
                          "required": true,
-                         "min": 0,
-                         "max": 360
+                         "minimum": 0,
+                         "maximum": 360
                       },
-                      "azimuth_high": {
+                      "azimuth_right": {
                          "type": "number",
                          "required": true,
-                         "min": 0,
-                         "max": 360
+                         "minimum": 0,
+                         "maximum": 360
+                      },
+                      "sun_uv": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 13
                       },
                       "altitude": {
                          "type": "number",
                          "default": 20,
-                         "required": true
+                         "required": true,
+                         "minimum": -90,
+                         "maximum": 90
                       },
                       "devices": {
                          "type": "array",
@@ -105,12 +189,15 @@
                       "position": {
                          "type": "number",
                          "required": true,
-                         "default": 0
+                         "default": 0,
+                         "minimum": 0,
+                         "maximum": 99
                       }
                   }
               }
           },
           "insulation_rules": {
+              "dependencies" : "insulation_active",
               "minItem": 1,
               "type": "array",
               "items": {
@@ -122,7 +209,9 @@
                       "altitude": {
                          "type": "number",
                          "default": -20,
-                         "required": true
+                         "required": true,
+                         "minimum": -90,
+                         "maximum": 90
                       },
                       "devices": {
                          "type": "array",
@@ -137,11 +226,30 @@
                       "position": {
                          "type": "number",
                          "required": true,
-                         "default": 0
+                         "default": 0,
+                         "minimum": 0,
+                         "maximum": 99
                       }
                   }
               }
-          }
+          },
+          "uv_sensor": {
+             "datasource" : "namespaces",
+             "enum" : "namespaces:devices_sensorMultilevel:deviceId",
+             "field" : "enum"
+          },
+          "temperature_outside_sensor": {
+              "datasource" : "namespaces",
+              "enum" : "namespaces:devices_sensorMultilevel:deviceId",
+              "field" : "enum",
+              "required": true
+           },
+           "temperature_inside_sensor": {
+               "datasource" : "namespaces",
+               "enum" : "namespaces:devices_sensorMultilevel:deviceId",
+               "field" : "enum",
+               "required": true
+            }
       },
       "required" : true,
       "type" : "object"
