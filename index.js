@@ -13,7 +13,7 @@ function BlindControl (id, controller) {
     // Call superconstructor first (AutomationModule)
     BlindControl.super_.call(this, id, controller);
 
-    self.timer      = undefined;
+    this.interval      = undefined;
 }
 
 inherits(BlindControl, AutomationModule);
@@ -53,7 +53,7 @@ BlindControl.prototype.init = function (config) {
         moduleId: self.id
     });
     
-    self.timer = setTimer(_.bind(self.checkConditions,self),1000*60*3);
+    self.interval = setInterval(_.bind(self.checkConditions,self),1000*60*3);
 };
 
 BlindControl.prototype.stop = function () {
@@ -62,6 +62,11 @@ BlindControl.prototype.stop = function () {
     if (self.vDev) {
         self.controller.devices.remove(self.vDev.id);
         self.vDev = undefined;
+    }
+    
+    if (typeof(self.interval) !== 'undefined') {
+        clearInterval(self.interval);
+        self.interval = undefined;
     }
     
     BlindControl.super_.prototype.stop.call(this);
