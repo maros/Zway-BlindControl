@@ -12,6 +12,37 @@
    "moduleName" : "BlindControl",
    "options" : {
       "fields" : {
+          "shade_active": {
+              "label": "__shade_active_label__",
+              "order": 1
+          },
+          "shade_rules": {
+              "order": 2,
+              "items": {
+                  "fields": {
+                      "temperature_outside": {
+                         "label": "__temperature_outside_label__"
+                      },
+                      "temperature_inside": {
+                      },
+                      "azimuth_low": {
+                      },
+                      "azimuth_high": {
+                      },
+                      "altitude": {
+                      },
+                      "devices": {
+                      }
+                  }
+              }
+          },
+          "insulation_active": {
+              "label": "__insulation_active_label__",
+              "order": 3
+          },
+          "insulation_rules": {
+              "order": 4
+          }
       }
    },
    "repository" : {
@@ -19,8 +50,98 @@
       "type" : "git"
    },
    "schema" : {
+      "dependencies": {
+          "shade_rules": ["shade_active"],
+          "insulation_rules": ["insulation_active"],
+      },
       "properties" : {
-          
+          "shade_active": {
+             "type": "boolean",
+             "default": false
+          },
+          "insulation_active": {
+             "type": "boolean",
+             "default": false
+          },
+          "shade_rules": {
+              "minItem": 1,
+              "type": "array",
+              "items": {
+                  "type": "object",
+                  "properties": {
+                      "temperature_outside": {
+                         "type": "number"
+                      },
+                      "temperature_inside": {
+                         "type": "number"
+                      },
+                      "azimuth_low": {
+                         "type": "number",
+                         "required": true,
+                         "min": 0,
+                         "max": 360
+                      },
+                      "azimuth_high": {
+                         "type": "number",
+                         "required": true,
+                         "min": 0,
+                         "max": 360
+                      },
+                      "altitude": {
+                         "type": "number",
+                         "default": 20,
+                         "required": true
+                      },
+                      "devices": {
+                         "type": "array",
+                         "items" : {
+                            "datasource" : "namespaces",
+                            "enum" : "namespaces:devices_switchMultilevel:deviceId",
+                            "field" : "enum",
+                            "required" : true
+                         },
+                         "minItems" : 1
+                      },
+                      "position": {
+                         "type": "number",
+                         "required": true,
+                         "default": 0
+                      }
+                  }
+              }
+          },
+          "insulation_rules": {
+              "minItem": 1,
+              "type": "array",
+              "items": {
+                  "type": "object",
+                  "properties": {
+                      "temperature_outside": {
+                         "type": "number"
+                      },
+                      "altitude": {
+                         "type": "number",
+                         "default": -20,
+                         "required": true
+                      },
+                      "devices": {
+                         "type": "array",
+                         "items" : {
+                            "datasource" : "namespaces",
+                            "enum" : "namespaces:devices_switchMultilevel:deviceId",
+                            "field" : "enum",
+                            "required" : true
+                         },
+                         "minItems" : 1
+                      },
+                      "position": {
+                         "type": "number",
+                         "required": true,
+                         "default": 0
+                      }
+                  }
+              }
+          }
       },
       "required" : true,
       "type" : "object"

@@ -12,6 +12,8 @@ Description:
 function BlindControl (id, controller) {
     // Call superconstructor first (AutomationModule)
     BlindControl.super_.call(this, id, controller);
+
+    self.timer      = undefined;
 }
 
 inherits(BlindControl, AutomationModule);
@@ -29,27 +31,29 @@ BlindControl.prototype.init = function (config) {
     var langFile = self.controller.loadModuleLang("BlindControl");
     
     // Create vdev
-    this.vDev = this.controller.devices.create({
-        deviceId: "BlindControl_" + this.id,
+    self.vDev = this.controller.devices.create({
+        deviceId: "BlindControl_" + self.id,
         defaults: {
             metrics: {
                 probeTitle: 'rain',
                 title: langFile.title,
                 level: 'off',
-                icon: '/ZAutomation/api/v1/load/modulemedia/BlindControl/icon_norain.png'
+                icon: '/ZAutomation/api/v1/load/modulemedia/BlindControl/icon_off.png'
             }
         },
         handler: function(command) {
             if (command === 'on' || command === 'off') {
                 this.set('metrics:level',command);
+                this.set('metrics:icon','/ZAutomation/api/v1/load/modulemedia/BlindControl/icon_'+command+'.png');
             }
         },
         overlay: {
             deviceType: 'switchBinary'
         },
-        moduleId: this.id
+        moduleId: self.id
     });
     
+    self.timer = setTimer(_.bind(self.checkConditions,self),1000*60*3);
 };
 
 BlindControl.prototype.stop = function () {
@@ -66,4 +70,14 @@ BlindControl.prototype.stop = function () {
 // ----------------------------------------------------------------------------
 // --- Module methods
 // ----------------------------------------------------------------------------
+
+BlindControl.prototype.checkConditions = function() {
+    var self = this;
+
+    if (self.vDev.get('metrics:level') === 'off') {
+        return;
+    }
+
+    // 
+};
 
