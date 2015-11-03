@@ -83,6 +83,55 @@ BlindControl.prototype.checkConditions = function() {
         return;
     }
 
-    // 
+    console.log('[BlindControl] Evaluating blind positions');
+
+    var outsideTemperature = self.getSensorData('outside_temperature');
+    if (typeof(outsideTemperature) === 'undefined') {
+        console.error('[BlindControl] Could not find outside temperature sensor');
+    }
+
+    // Handle winter blinds insulation
+    if (self.config.insulation_active) {
+        _.each(self.config.insulation_rules,function(rule) {
+            if (rule.temperature_outside > outsideTemperature) {
+                self.processInsulationRule(rule);
+            }
+        });
+    }
+
+    // Handle summer blinds shade
+    if (self.config.shade_active) {
+        _.each(self.config.shade_rules,function(rule) {
+            if (rule.temperature_outside > outsideTemperature) {
+                self.processShadeRule(rule);
+            }
+        });
+    }
 };
+
+BlindControl.prototype.processInsulationRule = function(rule) {
+    var self = this;
+    // TODO
+};
+
+BlindControl.prototype.processShadeRule = function(rule) {
+    var self = this;
+    // TODO
+    var insideTemperature  = self.getSensorData('inside_temperature');
+    
+};
+
+BlindControl.prototype.getSensorData = function(type) {
+    var self = this;
+
+    var deviceId = self.config[type+'_sensor'];
+    if (typeof(deviceId) === 'undefined') {
+        return;
+    }
+    var device = self.controller.devices.get(deviceId);
+    if (typeof(device) === 'undefined') {
+        return;
+    }
+    return device.get('metrics:level');
+}
 
