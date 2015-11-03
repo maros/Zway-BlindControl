@@ -86,7 +86,7 @@ BlindControl.prototype.checkConditions = function() {
 
     console.log('[BlindControl] Evaluating blind positions');
 
-    var outsideTemperature = self.getSensorData('outside_temperature');
+    var outsideTemperature = self.getSensorData('temperature_outside');
     if (typeof(outsideTemperature) === 'undefined') {
         console.error('[BlindControl] Could not find outside temperature sensor');
         return;
@@ -133,7 +133,7 @@ BlindControl.prototype.processShadeRule = function(rule) {
     
     // Check inside temperature
     if (typeof(rule.temperature_inside) !== 'undefined') {
-        var insideTemperature = self.getSensorData('inside_temperature');
+        var insideTemperature = self.getSensorData('temperature_inside');
         if (typeof(insideTemperature) === 'undefined') {
             console.error('[BlindControl] Could not find inside temperature sensor');
             return;
@@ -183,7 +183,6 @@ BlindControl.prototype.processShadeRule = function(rule) {
 */
 };
 
-
 BlindControl.prototype.moveDevice = function(deviceId,position) {
     var self = this;
     var deviceObject = self.controller.devices.get(deviceId);
@@ -217,8 +216,7 @@ BlindControl.prototype.getSunDevice = function() {
 
     if (typeof(self.sunDevice) === 'undefined') {
         self.controller.devices.each(function(vDev) {
-            var deviceType =  vDev.get('deviceType');
-            if (deviceType === 'sensorMultilevel'
+            if (vDev.get('deviceType') === 'sensorMultilevel'
                 && vDev.get('metrics:probeTitle') === 'astronomy') {
                 self.sunDevice = vDev;
             }
