@@ -89,6 +89,7 @@ BlindControl.prototype.checkConditions = function() {
     var outsideTemperature = self.getSensorData('outside_temperature');
     if (typeof(outsideTemperature) === 'undefined') {
         console.error('[BlindControl] Could not find outside temperature sensor');
+        return;
     }
 
     // Handle winter blinds insulation
@@ -103,7 +104,7 @@ BlindControl.prototype.checkConditions = function() {
     // Handle summer blinds shade
     if (self.config.shade_active) {
         _.each(self.config.shade_rules,function(rule) {
-            if (rule.temperature_outside > outsideTemperature) {
+            if (rule.temperature_outside < outsideTemperature) {
                 self.processShadeRule(rule);
             }
         });
@@ -112,29 +113,123 @@ BlindControl.prototype.checkConditions = function() {
 
 BlindControl.prototype.processInsulationRule = function(rule) {
     var self = this;
-    // TODO
+    
+    // Check sun altitude
+    if (rule.altitude < self.getSunAltitude()) {
+        // Close
+        _.each(rule.devices,function(deviceId) {
+            self.moveDevice(deviceId,rule.position);
+        });
+    } else {
+        // Re-open
+        _.each(rule.devices,function(deviceId) {
+            self.moveDevice(deviceId,0);
+        });
+    }
 };
 
 BlindControl.prototype.processShadeRule = function(rule) {
     var self = this;
-    var insideTemperature   = self.getSensorData('inside_temperature');
-    var uvIndex             = self.getSensorData('uv');
-
-    // TODO
     
+    // Check inside temperature
+    if (typeof(rule.temperature_inside) !== 'undefined') {
+        var insideTemperature = self.getSensorData('inside_temperature');
+        if (typeof(insideTemperature) === 'undefined') {
+            console.error('[BlindControl] Could not find inside temperature sensor');
+            return;
+        }
+        if (insideTemperature < rule.temperature_inside) {
+            return;
+        }
+    }
+    
+    // Check UV
+    if (typeof(rule.sun_uv) !== 'undefined') {
+        var uvIndex = self.getSensorData('uv');
+        if (typeof(uvIndex) === 'undefined') {
+            console.error('[BlindControl] Could not find UV sensor');
+            return;
+        }
+        if (uvIndex < rule.sun_uv) {
+            return;
+        }
+    }
+    
+    // Check sun altitude
+    if (rule.altitude > self.getSunAltitude()) {
+        // Close
+        _.each(rule.devices,function(deviceId) {
+            self.moveDevice(deviceId,rule.position);
+        });
+    } else {
+        // Re-open
+        _.each(rule.devices,function(deviceId) {
+            self.moveDevice(deviceId,0);
+        });
+    }
+/*
+     "azimuth_left": {
+        "type": "number",
+        "required": true,
+        "minimum": 0,
+        "maximum": 360
+     },
+     "azimuth_right": {
+        "type": "number",
+        "required": true,
+        "minimum": 0,
+        "maximum": 360
+     },
+*/
+};
+
+
+BlindControl.prototype.moveDevice = function(deviceId,position) {
+    var self = this;
+    var deviceObject = self.controller.devices.get(deviceId);
+    if (typeof(deviceObject) === 'undefined') {
+        console.error('[BlindControl] Could not find blinds device '+deviceId);
+        return;
+    }
+    if (position === 0
+        && deviceObject.get('metrics:auto') === false) {
+        return;
+    }
+    console.error('[BlindControl] Auto move blint '+deviceId+' to '+position);
+    deviceObject.set('metrics:auto',(position >= 99 ? false:true));
+    deviceObject.performCommand('exact',{ level: position });
+};
+
+BlindControl.prototype.getSunAzimuth = function() {
+    var self = this;
+    var sunDevice = self.getSunDevice();
+    return sunDevice.get('metrics:azimuth');
+};
+
+BlindControl.prototype.getSunAltitude = function() {
+    var self = this;
+    var sunDevice = self.getSunDevice();
+    return sunDevice.get('metrics:altitude');
 };
 
 BlindControl.prototype.getSunDevice = function() {
     var self = this;
 
-    self.controller.devices.each(function(vDev) {
-        var deviceType =  vDev.get('deviceType');
-        if (deviceType === 'sensorMultilevel'
-            && vDev.get('metrics:probeTitle') === 'astronomy') {
-            self.sunDevice = vDev;
-        }
-    });
-
+    if (typeof(self.sunDevice) === 'undefined') {
+        self.controller.devices.each(function(vDev) {
+            var deviceType =  vDev.get('deviceType');
+            if (deviceType === 'sensorMultilevel'
+                && vDev.get('metrics:probeTitle') === 'astronomy') {
+                self.sunDevice = vDev;
+            }
+        });
+    }
+    
+    if (typeof(self.sunDevice) === 'undefined') {
+        console.error('[BlindControl] Could not find astronomy device');
+    }
+    
+    return self.sunDevice;
 };
 
 BlindControl.prototype.getSensorData = function(type) {
