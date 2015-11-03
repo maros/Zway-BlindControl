@@ -13,7 +13,8 @@ function BlindControl (id, controller) {
     // Call superconstructor first (AutomationModule)
     BlindControl.super_.call(this, id, controller);
 
-    this.interval      = undefined;
+    this.interval       = undefined;
+    this.sunDevice      = undefined;
 }
 
 inherits(BlindControl, AutomationModule);
@@ -116,9 +117,24 @@ BlindControl.prototype.processInsulationRule = function(rule) {
 
 BlindControl.prototype.processShadeRule = function(rule) {
     var self = this;
+    var insideTemperature   = self.getSensorData('inside_temperature');
+    var uvIndex             = self.getSensorData('uv');
+
     // TODO
-    var insideTemperature  = self.getSensorData('inside_temperature');
     
+};
+
+BlindControl.prototype.getSunDevice = function() {
+    var self = this;
+
+    self.controller.devices.each(function(vDev) {
+        var deviceType =  vDev.get('deviceType');
+        if (deviceType === 'sensorMultilevel'
+            && vDev.get('metrics:probeTitle') === 'astronomy') {
+            self.sunDevice = vDev;
+        }
+    });
+
 };
 
 BlindControl.prototype.getSensorData = function(type) {
