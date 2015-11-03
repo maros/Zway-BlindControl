@@ -190,13 +190,14 @@ BlindControl.prototype.moveDevice = function(deviceId,position) {
         console.error('[BlindControl] Could not find blinds device '+deviceId);
         return;
     }
-    if (position === 0
-        && deviceObject.get('metrics:auto') === false) {
+    var deviceAuto = deviceObject.get('metrics:auto');
+    if ((position === 0 && deviceAuto === false) || deviceAuto === true) {
         return;
     }
     console.error('[BlindControl] Auto move blint '+deviceId+' to '+position);
     deviceObject.set('metrics:auto',(position >= 99 ? false:true));
     deviceObject.performCommand('exact',{ level: position });
+    // TODO command on/off if moving to extremes
 };
 
 BlindControl.prototype.getSunAzimuth = function() {
