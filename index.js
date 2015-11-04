@@ -36,11 +36,10 @@ BlindControl.prototype.init = function (config) {
     var langFile = self.controller.loadModuleLang("BlindControl");
     
     
-    // TODO one winter one summer dev
     // Create vdev
     _.each(['shade','insulation'],function(type) {
-        if (self.config[type+'_active'] === true) {
-            self[type+'_device'] = this.controller.devices.create({
+        if (config[type+'_active'] === true) {
+            self[type+'Device'] = this.controller.devices.create({
                 deviceId: "BlindControl_"+type+'_'+ self.id,
                 defaults: {
                     metrics: {
@@ -70,10 +69,13 @@ BlindControl.prototype.init = function (config) {
 BlindControl.prototype.stop = function () {
     var self = this;
     
-    if (self.vDev) {
-        self.controller.devices.remove(self.vDev.id);
-        self.vDev = undefined;
-    }
+    _.each(['shade','insulation'],function(type) {
+        var key = type+'Device';
+        if (typeof(self[key]) !== 'undefined') {
+            self.controller.devices.remove(self[key].id);
+            self[key] = undefined;
+        }
+    })
     
     if (typeof(self.interval) !== 'undefined') {
         clearInterval(self.interval);
@@ -147,8 +149,6 @@ BlindControl.prototype.processInsulationRules = function() {
     }
     
     _.each(self.config.insulation_rules,function(rule) {
-        console.log('[BlindControl] Process rule');
-        console.logJS(rule);
         // Check sun altitude & temp
         if (outsideTemperature < rule.temperature_outside
             && sunAltitude < rule.altitude) {
@@ -278,7 +278,7 @@ BlindControl.prototype.moveDevices = function(devices,position) {
         if ((position === 0 && deviceAuto === false) || (position > 0 && deviceAuto === true)) {
             return;
         }
-        console.error('[BlindControl] Auto move blint '+deviceId+' to '+position);
+        console.error('[BlindControl] Auto move blind '+deviceId+' to '+position);
         if (position === 0) {
             deviceObject.set('metrics:auto',false);
             deviceObject.performCommand('on');
