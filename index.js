@@ -85,88 +85,100 @@ BlindControl.prototype.checkConditions = function() {
     }
 
     console.log('[BlindControl] Evaluating blind positions');
+    if (self.config.insulation_active) {
+        self.processInsulationRules();
+    }
+    
+    if (self.config.shade_active) {
+        //self.processShadeRules();
+    }
+};
 
-    var outsideTemperature = self.getSensorData('temperature_outside');
+BlindControl.prototype.processInsulationRules = function() {
+    var self = this;
+    
+    var sunAltitude         = self.getSunAltitude();
+    var outsideTemperature  = self.getSensorData('temperature_outside');
     if (typeof(outsideTemperature) === 'undefined') {
         console.error('[BlindControl] Could not find outside temperature sensor');
         return;
     }
-
-    // Handle winter blinds insulation
-    if (self.config.insulation_active) {
-        _.each(self.config.insulation_rules,function(rule) {
-            if (rule.temperature_outside > outsideTemperature) {
-                self.processInsulationRule(rule);
-            }
-        });
-    }
-
-    // Handle summer blinds shade
-    if (self.config.shade_active) {
-        _.each(self.config.shade_rules,function(rule) {
-            if (rule.temperature_outside < outsideTemperature) {
-                self.processShadeRule(rule);
-            }
-        });
-    }
+    
+    _.each(self.config.insulation_rules,function(rule) {
+        console.log('[BlindControl] Process rule');
+        console.logJS(rule);
+        // Check sun altitude & temp
+        if (outsideTemperature < rule.temperature_outside
+            && sunAltitude < rule.altitude) {
+            self.moveDevices(rule.devices,rule.position);
+        } else if (sunAltitude > rule.altitude) {
+            self.moveDevices(rule.devices,0);
+        }
+    });
 };
 
-BlindControl.prototype.processInsulationRule = function(rule) {
+BlindControl.prototype.processShadeRules = function() {
     var self = this;
     
-    // Check sun altitude
-    if (rule.altitude < self.getSunAltitude()) {
-        // Close
-        _.each(rule.devices,function(deviceId) {
-            self.moveDevice(deviceId,rule.position);
-        });
-    } else {
-        // Re-open
-        _.each(rule.devices,function(deviceId) {
-            self.moveDevice(deviceId,0);
-        });
-    }
-};
-
-BlindControl.prototype.processShadeRule = function(rule) {
-    var self = this;
-    
-    // Check inside temperature
-    if (typeof(rule.temperature_inside) !== 'undefined') {
-        var insideTemperature = self.getSensorData('temperature_inside');
-        if (typeof(insideTemperature) === 'undefined') {
-            console.error('[BlindControl] Could not find inside temperature sensor');
-            return;
-        }
-        if (insideTemperature < rule.temperature_inside) {
-            return;
-        }
+    var sunAltitude         = self.getSunAltitude();
+    var outsideTemperature  = self.getSensorData('temperature_outside');
+    var insideTemperature   = self.getSensorData('temperature_inside');
+    var uvIndex             = self.getSensorData('uv');
+    if (typeof(outsideTemperature) === 'undefined') {
+        console.error('[BlindControl] Could not find outside temperature sensor');
+        return;
     }
     
-    // Check UV
-    if (typeof(rule.sun_uv) !== 'undefined') {
-        var uvIndex = self.getSensorData('uv');
-        if (typeof(uvIndex) === 'undefined') {
-            console.error('[BlindControl] Could not find UV sensor');
-            return;
+    _.each(self.config.shade_rules,function(rule) {
+        var matchClose      = true;
+        var matchPosition   = true;
+        
+        if (outsideTemperature < rule.temperature_outside) {
+            matchClose = false;
         }
-        if (uvIndex < rule.sun_uv) {
-            return;
+        
+        // Check inside temperature
+        if (typeof(rule.temperature_inside) !== 'undefined') {
+            if (typeof(insideTemperature) === 'undefined') {
+                console.error('[BlindControl] Could not find inside temperature sensor');
+                return;
+            }
+            if (insideTemperature < rule.temperature_inside) {
+                matchClose = false;
+            }
         }
-    }
-    
-    // Check sun altitude
-    if (rule.altitude > self.getSunAltitude()) {
-        // Close
-        _.each(rule.devices,function(deviceId) {
-            self.moveDevice(deviceId,rule.position);
-        });
-    } else {
-        // Re-open
-        _.each(rule.devices,function(deviceId) {
-            self.moveDevice(deviceId,0);
-        });
-    }
+        
+        // Check UV
+        if (typeof(rule.sun_uv) !== 'undefined') {
+            
+            if (typeof(uvIndex) === 'undefined') {
+                console.error('[BlindControl] Could not find UV sensor');
+                return;
+            }
+            if (uvIndex < rule.sun_uv) {
+                matchClose = false;
+            }
+        }
+        
+        if (sunAltitude < rule.altitude) {
+            matchPosition = false;
+        }
+        // TODO check azi
+        
+        // Check sun altitude
+        if (matchClose === true
+            && matchPosition === true) {
+            // Close
+            _.each(rule.devices,function(deviceId) {
+                self.moveDevice(deviceId,rule.position);
+            });
+        } else if (matchPosition === false) {
+            // Re-open
+            _.each(rule.devices,function(deviceId) {
+                self.moveDevice(deviceId,0);
+            });
+        }
+    });
 /*
      "azimuth_left": {
         "type": "number",
@@ -183,21 +195,30 @@ BlindControl.prototype.processShadeRule = function(rule) {
 */
 };
 
-BlindControl.prototype.moveDevice = function(deviceId,position) {
+BlindControl.prototype.moveDevices = function(devices,position) {
     var self = this;
-    var deviceObject = self.controller.devices.get(deviceId);
-    if (typeof(deviceObject) === 'undefined') {
-        console.error('[BlindControl] Could not find blinds device '+deviceId);
-        return;
-    }
-    var deviceAuto = deviceObject.get('metrics:auto');
-    if ((position === 0 && deviceAuto === false) || deviceAuto === true) {
-        return;
-    }
-    console.error('[BlindControl] Auto move blint '+deviceId+' to '+position);
-    deviceObject.set('metrics:auto',(position >= 99 ? false:true));
-    deviceObject.performCommand('exact',{ level: position });
-    // TODO command on/off if moving to extremes
+    
+    _.each(devices,function(deviceId) {
+        var deviceObject = self.controller.devices.get(deviceId);
+        if (typeof(deviceObject) === 'undefined') {
+            console.error('[BlindControl] Could not find blinds device '+deviceId);
+            return;
+        }
+        var deviceAuto = deviceObject.get('metrics:auto');
+        console.log('[BlindControl] Move to '+position+' auto:'+deviceAuto);
+        if ((position === 0 && deviceAuto === false) || (position > 0 && deviceAuto === true)) {
+            return;
+        }
+        console.error('[BlindControl] Auto move blint '+deviceId+' to '+position);
+        deviceObject.set('metrics:auto',(position >= 99 ? false:true));
+        if (position === 0) {
+            deviceObject.performCommand('on');
+        } else if (position > 99) {
+            deviceObject.performCommand('off');
+        } else {
+            deviceObject.performCommand('exact',{ level: position });
+        }
+    });
 };
 
 BlindControl.prototype.getSunAzimuth = function() {
