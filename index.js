@@ -17,6 +17,8 @@ function BlindControl (id, controller) {
     this.insulationDevice   = undefined;
     this.interval           = undefined;
     this.sunDevice          = undefined;
+    this.alarmCallback      = undefined;
+    this.allDevices         = [];
 }
 
 inherits(BlindControl, AutomationModule);
@@ -57,7 +59,12 @@ BlindControl.prototype.init = function (config) {
         }
     });
     
+    self.alarmCallback = _.bind(self.processAlarm,self);
+    self.controller.on('security.smoke.alarm',self.alarmCallback);
+    self.controller.on('security.smoke.cancel',self.alarmCallback);
+    
     self.interval = setInterval(_.bind(self.checkConditions,self),1000*60*3);
+    setTimeout(_.bind(self.initCallback,self),1000*60);
 };
 
 BlindControl.prototype.stop = function () {
@@ -73,7 +80,27 @@ BlindControl.prototype.stop = function () {
         self.interval = undefined;
     }
     
+    self.controller.off('security.smoke.alarm',self.alarmCallback);
+    self.controller.off('security.smoke.cancel',self.alarmCallback);
+    self.alarmCallback = undefined;
+    
     BlindControl.super_.prototype.stop.call(this);
+};
+
+BlindControl.prototype.initCallback = function() {
+    var self = this;
+    
+    var devices = [];
+    _.each(self.config.insulation_rules,function(rule) {
+        devices.push(rule.devices);
+    });
+    _.each(self.config.shade_rules,function(rule) {
+        devices.push(rule.devices);
+    });
+    
+    // TODO check for auto & closed mismatch
+    
+    self.allDevices = _.uniq(devices);
 };
 
 // ----------------------------------------------------------------------------
@@ -205,6 +232,35 @@ BlindControl.prototype.processShadeRules = function() {
             _.each(rule.devices,function(deviceId) {
                 self.moveDevice(deviceId,0);
             });
+        }
+    });
+};
+
+BlindControl.prototype.processAlarm = function(event) {
+    var self = this;
+    
+    var alarmed = false;
+    self.controller.devices.each(function(vDev) {
+        if (vDev.get('metrics:probeTitle') === 'security'
+            && vDev.get('metrics:securityType') === 'smoke') {
+            var state = vDev.get('metrics:state');
+            if (state === 'alarm' || state === 'timeout') {
+                alarmed = true;
+            }
+        }
+    });
+    
+    _.each(self.allDevices,function(deviceId) {
+        var deviceObject = self.controller.devices.get(deviceId);
+        if (typeof(deviceObject) === 'undefined') {
+            console.error('[BlindControl] Could not find blinds device '+deviceId);
+            return;
+        }
+        if (alarmed) {
+            deviceObject.set('metrics:auto',true);
+            deviceObject.performCommand('on');
+        } else {
+            deviceObject.set('metrics:auto',false);
         }
     });
 };
