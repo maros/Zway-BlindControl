@@ -31,6 +31,8 @@ BlindControl.prototype.init = function (config) {
     var self = this;
     var langFile = self.controller.loadModuleLang("BlindControl");
     
+    
+    // TODO one winter one summer dev
     // Create vdev
     self.vDev = this.controller.devices.create({
         deviceId: "BlindControl_" + self.id,
@@ -83,8 +85,9 @@ BlindControl.prototype.checkConditions = function() {
     if (self.vDev.get('metrics:level') === 'off') {
         return;
     }
-
     console.log('[BlindControl] Evaluating blind positions');
+    
+    // TODO based on dev status
     if (self.config.insulation_active) {
         self.processInsulationRules();
     }
@@ -205,7 +208,6 @@ BlindControl.prototype.moveDevices = function(devices,position) {
             return;
         }
         var deviceAuto = deviceObject.get('metrics:auto');
-        console.log('[BlindControl] Move to '+position+' auto:'+deviceAuto);
         if ((position === 0 && deviceAuto === false) || (position > 0 && deviceAuto === true)) {
             return;
         }
