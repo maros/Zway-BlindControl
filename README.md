@@ -1,60 +1,101 @@
 # Zway-BlindControl
 
-TODO
+Manages blinds and shades for optimal shading when hot, and insulation when
+cold. A virtual device will be created for each selected operations mode,
+that can fully disable blind control actions.
 
 # Configuration
 
 ## shade_active
 
+Configures if shading management should be activated.
+
 ## shade_rules
+
+A list of all rules/devices that should be managed. All selected conditions
+must match for the blinds to be closed.
 
 ## shade_rules.temperature_outside
 
+If the outside temperature rises above the selected level, this rule will
+be activated (optional)
+
 ## shade_rules.temperature_inside
+
+If the inside temperature rises above the selected level, this rule will
+be activated (optional)
 
 ## shade_rules.sun_uv
 
+If the UV index rises above the selected level, this rule will
+be activated (optional)
+
 ## shade_rules.azimuth_left, shade_rules.azimuth_right
+
+Select two azimuth levels (0-360°). Rule will be activated if sun is between 
+these two angles.
 
 ## shade_rules.altitude
 
+Activate rule if sun rises above the selected altitude.
+
 ## shade_rules.devices
+
+A list of all blinds and shaded managed by this rule
 
 ## shade_rules.position
 
+Desired closing position (0-99)
+
 ## insulation_active
+
+Configures if low-temperature shade insulation should be activated.
 
 ## insulation_rules
 
+A list of all rules/devices that should be managed. All selected conditions
+must match for the blinds to be closed.
+
 ## insulation_rules.temperature_outside
+
+If the outside temperature falls below the selected level, this rule will
+be activated (optional)
 
 ## insulation_rules.altitude
 
+Activate rule if sun falls below the selected altitude.
+
 ## insulation_rules.devices
+
+A list of all blinds and shaded managed by this rule
 
 ## insulation_rules.position
 
+Desired closing position (0-99)
+
 ## uv_sensor
 
-Device that measures the UV index. Can be either a physical device (eg. AeonLabs
-Multisensor) or a virtual device created by the WeatherUnderground module
-((https://github.com/maros/Zway-WeatherUnderground))
+Device that measures the UV index. Can be either a physical device (eg. Aeon
+Labs Multisensor Gen 5) or a virtual device created by the WeatherUnderground
+module ( https://github.com/maros/Zway-WeatherUnderground )
 
 ## temperature_outside_sensor
 
 Device that measures the outside temperature. Can be either a physical device
-or a virtual device created by a weather module 
-(eg. (https://github.com/maros/Zway-WeatherUnderground))
+or a virtual device created by any weather module 
+(eg. https://github.com/maros/Zway-WeatherUnderground )
 
 ## temperature_inside_sensor
 
-Device that easures the inside temperature.
+Device that measures the inside temperature. If you want to use the average
+temperature of multiple sensors, you can use the SummarySensor module 
+( https://github.com/maros/Zway-SummarySensor )
 
 # Virtual Devices
 
 This module creates two virtual binary that enables/disabled the shade and
 insulation behaviour. The devices will only be created if the respective
-rules are enabled in the configuration
+rules are enabled in the configuration.
 
 # Events
 
@@ -62,7 +103,7 @@ No events are emitted.
 
 Blind controller always listens to security.smoke.alarm and 
 security.smoke.cancel events (these events are usually emitted by 
-(https://github.com/maros/Zway-SecurityZone). In case of a smoke alarm all 
+( https://github.com/maros/Zway-SecurityZone ). In case of a smoke alarm all 
 blinds managed by the controller are automatically opened.
 
 # Installation
