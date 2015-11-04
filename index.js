@@ -210,12 +210,14 @@ BlindControl.prototype.moveDevices = function(devices,position) {
             return;
         }
         console.error('[BlindControl] Auto move blint '+deviceId+' to '+position);
-        deviceObject.set('metrics:auto',(position >= 99 ? false:true));
         if (position === 0) {
+            deviceObject.set('metrics:auto',false);
             deviceObject.performCommand('on');
         } else if (position > 99) {
+            deviceObject.set('metrics:auto',true);
             deviceObject.performCommand('off');
         } else {
+            deviceObject.set('metrics:auto',true);
             deviceObject.performCommand('exact',{ level: position });
         }
     });
