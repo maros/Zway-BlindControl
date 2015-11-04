@@ -4,6 +4,18 @@ Manages blinds and shades for optimal shading when hot, and insulation when
 cold. A virtual device will be created for each selected operations mode,
 that can fully disable blind control actions.
 
+It is possible to create multiple rules that manage several devices (eg. in 
+different rooms). Rules can be created based on
+
+* Inside temperature
+* Outside temperature
+* Solar intensity (UV Index)
+* Solar altitude
+* Solar azimuth
+
+This module depends on the Astronomy module from 
+https://github.com/maros/Zway-Astronomy
+
 # Configuration
 
 ## shade_active
@@ -107,6 +119,9 @@ security.smoke.cancel events (these events are usually emitted by
 blinds managed by the controller are automatically opened.
 
 # Installation
+
+Make sure that the Astronomy module is installed prior to installing this
+module ( https://github.com/maros/Zway-Astronomy )
 
 ```shell
 cd /opt/z-way-server/automation/modules
