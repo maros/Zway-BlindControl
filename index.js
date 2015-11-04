@@ -13,8 +13,10 @@ function BlindControl (id, controller) {
     // Call superconstructor first (AutomationModule)
     BlindControl.super_.call(this, id, controller);
 
-    this.interval       = undefined;
-    this.sunDevice      = undefined;
+    this.shadeDevice        = undefined;
+    this.insulationDevice   = undefined;
+    this.interval           = undefined;
+    this.sunDevice          = undefined;
 }
 
 inherits(BlindControl, AutomationModule);
@@ -34,26 +36,25 @@ BlindControl.prototype.init = function (config) {
     
     // TODO one winter one summer dev
     // Create vdev
-    self.vDev = this.controller.devices.create({
-        deviceId: "BlindControl_" + self.id,
-        defaults: {
-            metrics: {
-                probeTitle: 'rain',
-                title: langFile.title,
-                level: 'off',
-                icon: '/ZAutomation/api/v1/load/modulemedia/BlindControl/icon_off.png'
-            }
-        },
-        handler: function(command) {
-            if (command === 'on' || command === 'off') {
-                this.set('metrics:level',command);
-                this.set('metrics:icon','/ZAutomation/api/v1/load/modulemedia/BlindControl/icon_'+command+'.png');
-            }
-        },
-        overlay: {
-            deviceType: 'switchBinary'
-        },
-        moduleId: self.id
+    _.each(['shade','insulation'],function(type) {
+        if (self.config[type+'_active'] === true) {
+            self[type+'_device'] = this.controller.devices.create({
+                deviceId: "BlindControl_"+type+'_'+ self.id,
+                defaults: {
+                    metrics: {
+                        probeTitle: 'controller',
+                        title: langFile[type+'_active_label'],
+                        level: 'off',
+                        icon: '/ZAutomation/api/v1/load/modulemedia/BlindControl/icon_'+type+'_off.png'
+                    }
+                },
+                handler: _.bind(self.commandDevice,self,type),
+                overlay: {
+                    deviceType: 'switchBinary'
+                },
+                moduleId: self.id
+            });
+        }
     });
     
     self.interval = setInterval(_.bind(self.checkConditions,self),1000*60*3);
@@ -79,21 +80,32 @@ BlindControl.prototype.stop = function () {
 // --- Module methods
 // ----------------------------------------------------------------------------
 
+BlindControl.prototype.commandDevice = function(type,command) {
+    var self = this;
+    
+    if (command === 'on' || command === 'off') {
+        self[type+'Device'].set('metrics:level',command);
+        self[type+'Device'].set('metrics:icon','/ZAutomation/api/v1/load/modulemedia/BlindControl/icon_'+type+'_'+command+'.png');
+    }
+    if (command === 'on') {
+        var otherType = (type === 'shade') ? 'insulation':'shade';
+        if (self.config[otherType+'_active'] !== 'undefined') {
+            self[otherType+'Device'].performCommand('off');
+        }
+    }
+};
+
 BlindControl.prototype.checkConditions = function() {
     var self = this;
 
-    if (self.vDev.get('metrics:level') === 'off') {
-        return;
-    }
     console.log('[BlindControl] Evaluating blind positions');
-    
-    // TODO based on dev status
-    if (self.config.insulation_active) {
+    if (self.config.insulation_active
+        && self.insulationDevice.get('metrics:level') === 'on') {
         self.processInsulationRules();
     }
-    
-    if (self.config.shade_active) {
-        //self.processShadeRules();
+    if (self.config.shade_active
+        && self.shadeDevice.get('metrics:level') === 'on') {
+        self.processShadeRules();
     }
 };
 
@@ -124,6 +136,7 @@ BlindControl.prototype.processShadeRules = function() {
     var self = this;
     
     var sunAltitude         = self.getSunAltitude();
+    var sunAzimuth          = self.getSunAzimuth();
     var outsideTemperature  = self.getSensorData('temperature_outside');
     var insideTemperature   = self.getSensorData('temperature_inside');
     var uvIndex             = self.getSensorData('uv');
@@ -165,8 +178,20 @@ BlindControl.prototype.processShadeRules = function() {
         
         if (sunAltitude < rule.altitude) {
             matchPosition = false;
+        } else if (
+                (
+                    rule.azimuth_left < rule.azimuth_right
+                    && (sunAzimuth < shade.azimuth_left || sunAzimuth > rule.azimuth_right)
+                )
+                ||
+                (
+                    rule.azimuth_left > rule.azimuth_right
+                    && sunAzimuth > rule.azimuth_left
+                    && sunAzimuth < rule.azimuth_right
+                )
+            ) {
+            matchPosition = false;
         }
-        // TODO check azi
         
         // Check sun altitude
         if (matchClose === true
@@ -182,20 +207,6 @@ BlindControl.prototype.processShadeRules = function() {
             });
         }
     });
-/*
-     "azimuth_left": {
-        "type": "number",
-        "required": true,
-        "minimum": 0,
-        "maximum": 360
-     },
-     "azimuth_right": {
-        "type": "number",
-        "required": true,
-        "minimum": 0,
-        "maximum": 360
-     },
-*/
 };
 
 BlindControl.prototype.moveDevices = function(devices,position) {
