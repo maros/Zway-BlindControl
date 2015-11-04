@@ -4,12 +4,66 @@ TODO
 
 # Configuration
 
-## TODO
+## shade_active
+
+## shade_rules
+
+## shade_rules.temperature_outside
+
+## shade_rules.temperature_inside
+
+## shade_rules.sun_uv
+
+## shade_rules.azimuth_left, shade_rules.azimuth_right
+
+## shade_rules.altitude
+
+## shade_rules.devices
+
+## shade_rules.position
+
+## insulation_active
+
+## insulation_rules
+
+## insulation_rules.temperature_outside
+
+## insulation_rules.altitude
+
+## insulation_rules.devices
+
+## insulation_rules.position
+
+## uv_sensor
+
+Device that measures the UV index. Can be either a physical device (eg. AeonLabs
+Multisensor) or a virtual device created by the WeatherUnderground module
+((https://github.com/maros/Zway-WeatherUnderground))
+
+## temperature_outside_sensor
+
+Device that measures the outside temperature. Can be either a physical device
+or a virtual device created by a weather module 
+(eg. (https://github.com/maros/Zway-WeatherUnderground))
+
+## temperature_inside_sensor
+
+Device that easures the inside temperature.
 
 # Virtual Devices
 
-This module creates a virtual binarySensor device that enables/disabled the
-controller.
+This module creates two virtual binary that enables/disabled the shade and
+insulation behaviour. The devices will only be created if the respective
+rules are enabled in the configuration
+
+# Events
+
+No events are emitted.
+
+Blind controller always listens to security.smoke.alarm and 
+security.smoke.cancel events (these events are usually emitted by 
+(https://github.com/maros/Zway-SecurityZone). In case of a smoke alarm all 
+blinds managed by the controller are automatically opened.
 
 # Installation
 
