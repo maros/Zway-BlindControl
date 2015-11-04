@@ -23,26 +23,32 @@
                   "fields": {
                       "temperature_outside": {
                          "label": "__temperature_outside_label__",
-                         "helper": "__temperature_outside_shade_helper__"
+                         "helper": "__temperature_outside_shade_helper__",
+                         "order": 1
                       },
                       "temperature_inside": {
                           "label": "__temperature_inside_label__",
-                          "helper": "__temperature_inside_shade_helper__"
+                          "helper": "__temperature_inside_shade_helper__",
+                          "order": 2
                       },
                       "azimuth_left": {
-                          "label": "__azimuth_left_label__"
+                          "label": "__azimuth_left_label__",
+                          "order": 4
                       },
                       "azimuth_right": {
                           "label": "__azimuth_right_label__",
-                          "helper": "__azimuth_helper__"
+                          "helper": "__azimuth_helper__",
+                          "order": 5
                       },
                       "sun_uv": {
                           "label": "__sun_uv_label__",
-                          "helper": "__sun_uv_helper__"
+                          "helper": "__sun_uv_helper__",
+                          "order": 3
                       },
                       "altitude": {
                           "label": "__altitude_label__",
-                          "helper": "__altitude_shade_helper__"
+                          "helper": "__altitude_shade_helper__",
+                          "order": 6
                       },
                       "devices": {
                           "label": "__devices_label__",
@@ -53,10 +59,12 @@
                                  "optionLabels" : "namespaces:devices_switchMultilevel:deviceName",
                                  "type" : "select"
                               }
-                          }
+                          },
+                          "order": 6
                       },
                       "position": {
-                          "label": "__position_label__"
+                          "label": "__position_label__",
+                          "order": 7
                       }
                   }
               }
@@ -72,11 +80,13 @@
                   "fields": {
                       "temperature_outside": {
                           "label": "__temperature_outside_label__",
-                          "helper": "__temperature_outside_insulation_helper__"
+                          "helper": "__temperature_outside_insulation_helper__",
+                          "order": 1
                        },
                        "altitude": {
                            "label": "__altitude_label__",
-                           "helper": "__altitude_insulation_helper__"
+                           "helper": "__altitude_insulation_helper__",
+                           "order": 2
                        },
                        "devices": {
                            "label": "__devices_label__",
@@ -87,10 +97,12 @@
                                   "optionLabels" : "namespaces:devices_switchMultilevel:deviceName",
                                   "type" : "select"
                                }
-                           }
+                           },
+                           "order": 3
                        },
                        "position": {
-                           "label": "__position_label__"
+                           "label": "__position_label__",
+                           "order": 4
                        }
                   }
               }
