@@ -239,16 +239,20 @@ BlindControl.prototype.processShadeRules = function() {
 BlindControl.prototype.processAlarm = function(event) {
     var self = this;
     
-    var alarmed = false;
+    var alarmed = true;
     self.controller.devices.each(function(vDev) {
         if (vDev.get('metrics:probeTitle') === 'security'
             && vDev.get('metrics:securityType') === 'smoke') {
             var state = vDev.get('metrics:state');
-            if (state === 'alarm' || state === 'timeout') {
-                alarmed = true;
+            if (state !== 'alarm' && state !== 'timeout') {
+                alarmed = false;
             }
         }
     });
+    
+    if (alarmed) {
+        console.log('[BlindControl] Opening all blinds due to smoke alarm');
+    }
     
     _.each(self.allDevices,function(deviceId) {
         var deviceObject = self.controller.devices.get(deviceId);
