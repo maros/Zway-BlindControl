@@ -102,7 +102,7 @@ BlindControl.prototype.initCallback = function() {
     
     // TODO check for auto & closed mismatch
     
-    self.allDevices = _.uniq(devices);
+    self.allDevices = _.uniq(_.flatten(devices));
 };
 
 // ----------------------------------------------------------------------------
