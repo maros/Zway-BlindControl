@@ -256,7 +256,7 @@ BlindControl.prototype.processAlarm = function(event) {
     
     _.each(self.allDevices,function(deviceId) {
         var deviceObject = self.controller.devices.get(deviceId);
-        if (typeof(deviceObject) === 'undefined') {
+        if (deviceObject === null) {
             console.error('[BlindControl] Could not find blinds device '+deviceId);
             return;
         }
@@ -274,7 +274,7 @@ BlindControl.prototype.moveDevices = function(devices,position) {
     
     _.each(devices,function(deviceId) {
         var deviceObject = self.controller.devices.get(deviceId);
-        if (typeof(deviceObject) === 'undefined') {
+        if (deviceObject === null) {
             console.error('[BlindControl] Could not find blinds device '+deviceId);
             return;
         }
@@ -335,7 +335,7 @@ BlindControl.prototype.getSensorData = function(type) {
         return;
     }
     var device = self.controller.devices.get(deviceId);
-    if (typeof(device) === 'undefined') {
+    if (deviceObject === null) {
         return;
     }
     return device.get('metrics:level');
