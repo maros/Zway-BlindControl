@@ -334,10 +334,10 @@ BlindControl.prototype.getSensorData = function(type) {
     if (typeof(deviceId) === 'undefined') {
         return;
     }
-    var device = self.controller.devices.get(deviceId);
+    var deviceObject = self.controller.devices.get(deviceId);
     if (deviceObject === null) {
         return;
     }
-    return device.get('metrics:level');
+    return deviceObject.get('metrics:level');
 }
 
