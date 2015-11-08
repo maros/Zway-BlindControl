@@ -314,14 +314,14 @@ BlindControl.prototype.getSunDevice = function() {
     if (typeof(self.sunDevice) === 'undefined') {
         self.controller.devices.each(function(vDev) {
             if (vDev.get('deviceType') === 'sensorMultilevel'
-                && vDev.get('metrics:probeTitle') === 'astronomy') {
+                && vDev.get('metrics:probeTitle') === 'Astronomy') {
                 self.sunDevice = vDev;
             }
         });
     }
     
     if (typeof(self.sunDevice) === 'undefined') {
-        console.error('[BlindControl] Could not find astronomy device');
+        console.error('[BlindControl] Could not find Astronomy device');
     }
     
     return self.sunDevice;
