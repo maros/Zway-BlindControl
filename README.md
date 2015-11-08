@@ -57,7 +57,7 @@ A list of all blinds and shaded managed by this rule
 
 ## shade_rules.position
 
-Desired closing position (0-99)
+Desired closing position (0-255)
 
 ## insulation_active
 
@@ -83,7 +83,7 @@ A list of all blinds and shaded managed by this rule
 
 ## insulation_rules.position
 
-Desired closing position (0-99)
+Desired closing position (0-255)
 
 ## uv_sensor
 

@@ -286,7 +286,7 @@ BlindControl.prototype.moveDevices = function(devices,position) {
         if (position === 0) {
             deviceObject.set('metrics:auto',false);
             deviceObject.performCommand('on');
-        } else if (position > 99) {
+        } else if (position >= 255) {
             deviceObject.set('metrics:auto',true);
             deviceObject.performCommand('off');
         } else {

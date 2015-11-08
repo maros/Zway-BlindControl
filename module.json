@@ -172,7 +172,7 @@
                   },
                   "position" : {
                      "default" : 0,
-                     "maximum" : 99,
+                     "maximum" : 255,
                      "minimum" : 0,
                      "required" : true,
                      "type" : "number"
@@ -225,7 +225,7 @@
                   },
                   "position" : {
                      "default" : 0,
-                     "maximum" : 99,
+                     "maximum" : 255,
                      "minimum" : 0,
                      "required" : true,
                      "type" : "number"
