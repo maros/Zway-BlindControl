@@ -13,8 +13,18 @@ different rooms). Rules can be created based on
 * Solar altitude
 * Solar azimuth
 
+The module supports two operation modes: Shading and insulation. For shading
+blinds will be closed once all preconditions (in- and outside temperature and
+solar intensity) match, and the sun shines into a particular window
+(calculated based on altitude and azimuth). The blinds will stay closed until
+the sun has moved out of the slected area (regardless of the temperature) - 
+either because it set below the selected altitude, or because it does not 
+match the selected azimuth angles. In insulation mode the blinds will be 
+closed if the temperature and the altitude fall below a certain level. Blinds 
+will be reopened once the solar altitude rises above the selected level.
+
 This module depends on the Astronomy module from 
-https://github.com/maros/Zway-Astronomy
+https://github.com/maros/Zway-Astronomy for calculatin the solar position.
 
 # Configuration
 
