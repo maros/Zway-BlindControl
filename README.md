@@ -23,10 +23,10 @@ match the selected azimuth angles. In insulation mode the blinds will be
 closed if the temperature and the altitude fall below a certain level. Blinds 
 will be reopened once the solar altitude rises above the selected level.
 
+# Configuration
+
 This module depends on the Astronomy module from 
 https://github.com/maros/Zway-Astronomy for calculatin the solar position.
-
-# Configuration
 
 ## shade_active
 
