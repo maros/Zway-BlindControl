@@ -1,2 +1,9 @@
+1.01 2015 Nov 15, Sun
+    * Update documentation
+    * Cleanups
+    * Update astronomy probeTitle
+    * Max 255 for multilevel
+    * Improve alarm handling
+
 1.00 2015 Nov 04, Wed
     * Initial Release 
