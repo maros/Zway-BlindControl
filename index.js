@@ -100,9 +100,24 @@ BlindControl.prototype.initCallback = function() {
         devices.push(rule.devices);
     });
     
-    // TODO check for auto & closed mismatch
-    
     self.allDevices = _.uniq(_.flatten(devices));
+    
+    _.each(self.allDevices,function(deviceId) {
+        var deviceObject = self.controller.devices.get(deviceId);
+        if (deviceObject === null) {
+            console.error('[BlindControl] Could not find blinds device '+deviceId);
+            return;
+        }
+        var deviceAuto  = deviceObject.get('metrics:auto');
+        if (typeof(deviceAuto) === 'undefined') {
+            deviceObject.get('metrics:auto',false);
+        } else if (deviceAuto === true) {
+            var deviceLevel = deviceObject.get('metrics:level');
+            if (deviceLevel >= 100) {
+                deviceObject.get('metrics:auto',false);
+            }
+        }
+    });
 };
 
 // ----------------------------------------------------------------------------
@@ -286,7 +301,7 @@ BlindControl.prototype.moveDevices = function(devices,position) {
         if (position === 0) {
             deviceObject.set('metrics:auto',false);
             deviceObject.performCommand('on');
-        } else if (position >= 255) {
+        } else if (position === 255) {
             deviceObject.set('metrics:auto',true);
             deviceObject.performCommand('off');
         } else {
