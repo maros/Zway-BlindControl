@@ -17,7 +17,7 @@
    "temperature_inside_label" : "Inside temperature",
    "temperature_inside_sensor_label" : "Inside Temperature Sensor",
    "temperature_inside_shade_helper" : "If inside temperature rises above this level shading will be activated",
-   "temperature_outside_insulation_helper" : "If outside temperature falls belo this level shading will be activated",
+   "temperature_outside_insulation_helper" : "If outside temperature falls below this level shading will be activated",
    "temperature_outside_label" : "Outside temperature",
    "temperature_outside_sensor_label" : "Outside Temperature Sensor",
    "temperature_outside_shade_helper" : "If outside temperature rises above this level shading will be activated",

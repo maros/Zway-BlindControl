@@ -169,7 +169,7 @@ BlindControl.prototype.processInsulationRules = function() {
             && sunAltitude < rule.altitude) {
             self.moveDevices(rule.devices,rule.position);
         } else if (sunAltitude > rule.altitude) {
-            self.moveDevices(rule.devices,0);
+            self.moveDevices(rule.devices,100);
         }
     });
 };
@@ -245,7 +245,7 @@ BlindControl.prototype.processShadeRules = function() {
         } else if (matchPosition === false) {
             // Re-open
             _.each(rule.devices,function(deviceId) {
-                self.moveDevice(deviceId,0);
+                self.moveDevice(deviceId,255);
             });
         }
     });
@@ -293,17 +293,30 @@ BlindControl.prototype.moveDevices = function(devices,position) {
             console.error('[BlindControl] Could not find blinds device '+deviceId);
             return;
         }
-        var deviceAuto = deviceObject.get('metrics:auto');
-        if ((position === 0 && deviceAuto === false) || (position > 0 && deviceAuto === true)) {
+        var deviceAuto  = deviceObject.get('metrics:auto');
+        var devicePos   = deviceObject.get('metrics:level');
+        if (typeof(deviceAuto) === 'undefined') {
+            deviceAuto = false;
+        }
+        
+        // Open
+        if (position >= 99 && (devicePos >= 99 || deviceAuto === false)) {
+            if (deviceAuto === true) {
+                deviceObject.set('metrics:auto',false);
+            }
+            return;
+        // Close
+        } else if  (position < 99 && (devicePos < 99 || deviceAuto === true)) {
             return;
         }
+        
         console.error('[BlindControl] Auto move blind '+deviceId+' to '+position);
         if (position === 0) {
             deviceObject.set('metrics:auto',false);
-            deviceObject.performCommand('on');
-        } else if (position === 255) {
-            deviceObject.set('metrics:auto',true);
             deviceObject.performCommand('off');
+        } else if (position >= 99) {
+            deviceObject.set('metrics:auto',true);
+            deviceObject.performCommand('on');
         } else {
             deviceObject.set('metrics:auto',true);
             deviceObject.performCommand('exact',{ level: position });
