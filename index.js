@@ -312,10 +312,10 @@ BlindControl.prototype.moveDevices = function(devices,position) {
         
         console.error('[BlindControl] Auto move blind '+deviceId+' to '+position);
         if (position === 0) {
-            deviceObject.set('metrics:auto',false);
+            deviceObject.set('metrics:auto',true);
             deviceObject.performCommand('off');
         } else if (position >= 99) {
-            deviceObject.set('metrics:auto',true);
+            deviceObject.set('metrics:auto',false);
             deviceObject.performCommand('on');
         } else {
             deviceObject.set('metrics:auto',true);
