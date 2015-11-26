@@ -110,11 +110,11 @@ BlindControl.prototype.initCallback = function() {
         }
         var deviceAuto  = deviceObject.get('metrics:auto');
         if (typeof(deviceAuto) === 'undefined') {
-            deviceObject.get('metrics:auto',false);
+            deviceObject.set('metrics:auto',false);
         } else if (deviceAuto === true) {
             var deviceLevel = deviceObject.get('metrics:level');
-            if (deviceLevel >= 100) {
-                deviceObject.get('metrics:auto',false);
+            if (deviceLevel > 99) {
+                deviceObject.set('metrics:auto',false);
             }
         }
     });
@@ -295,9 +295,6 @@ BlindControl.prototype.moveDevices = function(devices,position) {
         }
         var deviceAuto  = deviceObject.get('metrics:auto');
         var devicePos   = deviceObject.get('metrics:level');
-        if (typeof(deviceAuto) === 'undefined') {
-            deviceAuto = false;
-        }
         
         // Open
         if (position >= 99 && (devicePos >= 99 || deviceAuto === false)) {
