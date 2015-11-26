@@ -43,7 +43,6 @@ BlindControl.prototype.init = function (config) {
                 deviceId: "BlindControl_"+type+'_'+ self.id,
                 defaults: {
                     metrics: {
-                        probeTitle: 'controller',
                         title: langFile[type+'_active_label'],
                         level: 'off',
                         icon: '/ZAutomation/api/v1/load/modulemedia/BlindControl/icon_'+type+'_off.png'
@@ -51,6 +50,7 @@ BlindControl.prototype.init = function (config) {
                 },
                 handler: _.bind(self.commandDevice,self,type),
                 overlay: {
+                    probeType: 'BlindController',
                     deviceType: 'switchBinary'
                 },
                 moduleId: self.id
