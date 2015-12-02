@@ -169,7 +169,7 @@ BlindControl.prototype.processInsulationRules = function() {
             sunAltitude < rule.altitude) {
             self.moveDevices(rule.devices,rule.position);
         } else if (sunAltitude > rule.altitude) {
-            self.moveDevices(rule.devices,100);
+            self.moveDevices(rule.devices,255);
         }
     });
 };
@@ -238,14 +238,10 @@ BlindControl.prototype.processShadeRules = function() {
         if (matchClose === true
             && matchPosition === true) {
             // Close
-            _.each(rule.devices,function(deviceId) {
-                self.moveDevice(deviceId,rule.position);
-            });
+            self.moveDevices(rule.devices,rule.position);
         } else if (matchPosition === false) {
             // Re-open
-            _.each(rule.devices,function(deviceId) {
-                self.moveDevice(deviceId,255);
-            });
+            self.moveDevices(rule.devices,255);
         }
     });
 };
@@ -298,7 +294,7 @@ BlindControl.prototype.moveDevices = function(devices,position) {
         // Open
         if (position >= 99 && (devicePos >= 99 || deviceAuto === false)) {
             if (deviceAuto === true) {
-                deviceObject.set('metrics:auto',false);
+                //deviceObject.set('metrics:auto',false);
             }
             return;
         // Close
