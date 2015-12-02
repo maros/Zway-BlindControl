@@ -38,7 +38,7 @@ BlindControl.prototype.init = function (config) {
     
     // Create vdev
     _.each(['shade','insulation'],function(type) {
-        if (config[type+'_active'] === true) {
+        if (config[type+'Active'] === true) {
             self[type+'Device'] = this.controller.devices.create({
                 deviceId: "BlindControl_"+type+'_'+ self.id,
                 defaults: {
@@ -93,10 +93,10 @@ BlindControl.prototype.initCallback = function() {
     var self = this;
     
     var devices = [];
-    _.each(self.config.insulation_rules,function(rule) {
+    _.each(self.config.insulationRules,function(rule) {
         devices.push(rule.devices);
     });
-    _.each(self.config.shade_rules,function(rule) {
+    _.each(self.config.shadeRules,function(rule) {
         devices.push(rule.devices);
     });
     
@@ -133,7 +133,7 @@ BlindControl.prototype.commandDevice = function(type,command) {
     }
     if (command === 'on') {
         var otherType = (type === 'shade') ? 'insulation':'shade';
-        if (self.config[otherType+'_active'] !== 'undefined') {
+        if (typeof(self[otherType+'Device']) !== 'undefined') {
             self[otherType+'Device'].performCommand('off');
         }
     }
@@ -143,12 +143,12 @@ BlindControl.prototype.checkConditions = function() {
     var self = this;
 
     console.log('[BlindControl] Evaluating blind positions');
-    if (self.config.insulation_active
-        && self.insulationDevice.get('metrics:level') === 'on') {
+    if (self.config.insulationActive && 
+        self.insulationDevice.get('metrics:level') === 'on') {
         self.processInsulationRules();
     }
-    if (self.config.shade_active
-        && self.shadeDevice.get('metrics:level') === 'on') {
+    if (self.config.shadeActive && 
+        self.shadeDevice.get('metrics:level') === 'on') {
         self.processShadeRules();
     }
 };
@@ -157,16 +157,16 @@ BlindControl.prototype.processInsulationRules = function() {
     var self = this;
     
     var sunAltitude         = self.getSunAltitude();
-    var outsideTemperature  = self.getSensorData('temperature_outside');
+    var outsideTemperature  = self.getSensorData('temperatureOutside');
     if (typeof(outsideTemperature) === 'undefined') {
         console.error('[BlindControl] Could not find outside temperature sensor');
         return;
     }
     
-    _.each(self.config.insulation_rules,function(rule) {
+    _.each(self.config.insulationRules,function(rule) {
         // Check sun altitude & temp
-        if (outsideTemperature < rule.temperature_outside
-            && sunAltitude < rule.altitude) {
+        if (outsideTemperature < rule.temperatureOutside && 
+            sunAltitude < rule.altitude) {
             self.moveDevices(rule.devices,rule.position);
         } else if (sunAltitude > rule.altitude) {
             self.moveDevices(rule.devices,100);
@@ -179,41 +179,41 @@ BlindControl.prototype.processShadeRules = function() {
     
     var sunAltitude         = self.getSunAltitude();
     var sunAzimuth          = self.getSunAzimuth();
-    var outsideTemperature  = self.getSensorData('temperature_outside');
-    var insideTemperature   = self.getSensorData('temperature_inside');
+    var outsideTemperature  = self.getSensorData('temperatureOutside');
+    var insideTemperature   = self.getSensorData('temperatureInside');
     var uvIndex             = self.getSensorData('uv');
     if (typeof(outsideTemperature) === 'undefined') {
         console.error('[BlindControl] Could not find outside temperature sensor');
         return;
     }
     
-    _.each(self.config.shade_rules,function(rule) {
+    _.each(self.config.shadeRules,function(rule) {
         var matchClose      = true;
         var matchPosition   = true;
         
-        if (outsideTemperature < rule.temperature_outside) {
+        if (outsideTemperature < rule.temperatureOutside) {
             matchClose = false;
         }
         
         // Check inside temperature
-        if (typeof(rule.temperature_inside) !== 'undefined') {
+        if (typeof(rule.temperatureInside) !== 'undefined') {
             if (typeof(insideTemperature) === 'undefined') {
                 console.error('[BlindControl] Could not find inside temperature sensor');
                 return;
             }
-            if (insideTemperature < rule.temperature_inside) {
+            if (insideTemperature < rule.temperatureInside) {
                 matchClose = false;
             }
         }
         
         // Check UV
-        if (typeof(rule.sun_uv) !== 'undefined') {
+        if (typeof(rule.sunUv) !== 'undefined') {
             
             if (typeof(uvIndex) === 'undefined') {
                 console.error('[BlindControl] Could not find UV sensor');
                 return;
             }
-            if (uvIndex < rule.sun_uv) {
+            if (uvIndex < rule.sunUv) {
                 matchClose = false;
             }
         }
@@ -222,14 +222,13 @@ BlindControl.prototype.processShadeRules = function() {
             matchPosition = false;
         } else if (
                 (
-                    rule.azimuth_left < rule.azimuth_right
-                    && (sunAzimuth < shade.azimuth_left || sunAzimuth > rule.azimuth_right)
-                )
-                ||
+                    rule.azimuthLeft < rule.azimuthRight && 
+                    (sunAzimuth < shade.azimuthLeft || sunAzimuth > rule.azimuthRight)
+                ) ||
                 (
-                    rule.azimuth_left > rule.azimuth_right
-                    && sunAzimuth > rule.azimuth_left
-                    && sunAzimuth < rule.azimuth_right
+                    rule.azimuthLeft > rule.azimuthRight && 
+                    sunAzimuth > rule.azimuthLeft && 
+                    sunAzimuth < rule.azimuthRight
                 )
             ) {
             matchPosition = false;
@@ -355,7 +354,7 @@ BlindControl.prototype.getSunDevice = function() {
 BlindControl.prototype.getSensorData = function(type) {
     var self = this;
 
-    var deviceId = self.config[type+'_sensor'];
+    var deviceId = self.config[type+'Sensor'];
     if (typeof(deviceId) === 'undefined') {
         return;
     }
