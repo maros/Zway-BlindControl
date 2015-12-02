@@ -75,7 +75,7 @@ BlindControl.prototype.stop = function () {
             self.controller.devices.remove(self[key].id);
             self[key] = undefined;
         }
-    })
+    });
     
     if (typeof(self.interval) !== 'undefined') {
         clearInterval(self.interval);
@@ -363,5 +363,4 @@ BlindControl.prototype.getSensorData = function(type) {
         return;
     }
     return deviceObject.get('metrics:level');
-}
-
+};
