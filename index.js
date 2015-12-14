@@ -21,7 +21,7 @@ function BlindControl (id, controller) {
     this.allDevices         = [];
 }
 
-inherits(BlindControl, AutomationModule);
+inherits(BlindControl, BaseModule);
 
 _module = BlindControl;
 
@@ -33,8 +33,6 @@ BlindControl.prototype.init = function (config) {
     BlindControl.super_.prototype.init.call(this, config);
 
     var self = this;
-    var langFile = self.controller.loadModuleLang("BlindControl");
-    
     
     // Create vdev
     _.each(['shade','insulation'],function(type) {
@@ -43,7 +41,7 @@ BlindControl.prototype.init = function (config) {
                 deviceId: "BlindControl_"+type+'_'+ self.id,
                 defaults: {
                     metrics: {
-                        title: langFile[type+'_active_label'],
+                        title: self.langFile[type+'_active_label'],
                         level: 'off',
                         icon: '/ZAutomation/api/v1/load/modulemedia/BlindControl/icon_'+type+'_off.png'
                     }
@@ -105,7 +103,7 @@ BlindControl.prototype.initCallback = function() {
     _.each(self.allDevices,function(deviceId) {
         var deviceObject = self.controller.devices.get(deviceId);
         if (deviceObject === null) {
-            console.error('[BlindControl] Could not find blinds device '+deviceId);
+            self.error('Could not find blinds device '+deviceId);
             return;
         }
         var deviceAuto  = deviceObject.get('metrics:auto');
@@ -142,7 +140,7 @@ BlindControl.prototype.commandDevice = function(type,command) {
 BlindControl.prototype.checkConditions = function() {
     var self = this;
 
-    console.log('[BlindControl] Evaluating blind positions');
+    self.log('Evaluating blind positions');
     if (self.config.insulationActive && 
         self.insulationDevice.get('metrics:level') === 'on') {
         self.processInsulationRules();
@@ -159,7 +157,7 @@ BlindControl.prototype.processInsulationRules = function() {
     var sunAltitude         = self.getSunAltitude();
     var outsideTemperature  = self.getSensorData('temperatureOutside');
     if (typeof(outsideTemperature) === 'undefined') {
-        console.error('[BlindControl] Could not find outside temperature sensor');
+        self.error('Could not find outside temperature sensor');
         return;
     }
     
@@ -183,7 +181,7 @@ BlindControl.prototype.processShadeRules = function() {
     var insideTemperature   = self.getSensorData('temperatureInside');
     var uvIndex             = self.getSensorData('uv');
     if (typeof(outsideTemperature) === 'undefined') {
-        console.error('[BlindControl] Could not find outside temperature sensor');
+        self.error('Could not find outside temperature sensor');
         return;
     }
     
@@ -198,7 +196,7 @@ BlindControl.prototype.processShadeRules = function() {
         // Check inside temperature
         if (typeof(rule.temperatureInside) !== 'undefined') {
             if (typeof(insideTemperature) === 'undefined') {
-                console.error('[BlindControl] Could not find inside temperature sensor');
+                self.error('Could not find inside temperature sensor');
                 return;
             }
             if (insideTemperature < rule.temperatureInside) {
@@ -210,7 +208,7 @@ BlindControl.prototype.processShadeRules = function() {
         if (typeof(rule.sunUv) !== 'undefined') {
             
             if (typeof(uvIndex) === 'undefined') {
-                console.error('[BlindControl] Could not find UV sensor');
+                self.error('Could not find UV sensor');
                 return;
             }
             if (uvIndex < rule.sunUv) {
@@ -261,13 +259,13 @@ BlindControl.prototype.processAlarm = function(event) {
     });
     
     if (alarmed) {
-        console.log('[BlindControl] Opening all blinds due to smoke alarm');
+        self.log('Opening all blinds due to smoke alarm');
     }
     
     _.each(self.allDevices,function(deviceId) {
         var deviceObject = self.controller.devices.get(deviceId);
         if (deviceObject === null) {
-            console.error('[BlindControl] Could not find blinds device '+deviceId);
+            self.error('Could not find blinds device '+deviceId);
             return;
         }
         if (alarmed) {
@@ -285,7 +283,7 @@ BlindControl.prototype.moveDevices = function(devices,position) {
     _.each(devices,function(deviceId) {
         var deviceObject = self.controller.devices.get(deviceId);
         if (deviceObject === null) {
-            console.error('[BlindControl] Could not find blinds device '+deviceId);
+            self.error('Could not find blinds device '+deviceId);
             return;
         }
         var deviceAuto  = deviceObject.get('metrics:auto');
@@ -302,7 +300,7 @@ BlindControl.prototype.moveDevices = function(devices,position) {
             return;
         }
         
-        console.error('[BlindControl] Auto move blind '+deviceId+' to '+position);
+        self.error('Auto move blind '+deviceId+' to '+position);
         if (position === 0) {
             deviceObject.set('metrics:auto',true);
             deviceObject.performCommand('off');
@@ -318,33 +316,16 @@ BlindControl.prototype.moveDevices = function(devices,position) {
 
 BlindControl.prototype.getSunAzimuth = function() {
     var self = this;
-    var sunDevice = self.getSunDevice();
-    return sunDevice.get('metrics:azimuth');
+    return self.getDeviceValue([
+        ['metrics:probeTitle','=','Astronomy']
+    ],'metrics:azimuth');
 };
 
 BlindControl.prototype.getSunAltitude = function() {
     var self = this;
-    var sunDevice = self.getSunDevice();
-    return sunDevice.get('metrics:altitude');
-};
-
-BlindControl.prototype.getSunDevice = function() {
-    var self = this;
-
-    if (typeof(self.sunDevice) === 'undefined') {
-        self.controller.devices.each(function(vDev) {
-            if (vDev.get('deviceType') === 'sensorMultilevel'
-                && vDev.get('metrics:probeTitle') === 'Astronomy') {
-                self.sunDevice = vDev;
-            }
-        });
-    }
-    
-    if (typeof(self.sunDevice) === 'undefined') {
-        console.error('[BlindControl] Could not find Astronomy device');
-    }
-    
-    return self.sunDevice;
+    return self.getDeviceValue([
+        ['metrics:probeTitle','=','Astronomy']
+    ],'metrics:altitude');
 };
 
 BlindControl.prototype.getSensorData = function(type) {
