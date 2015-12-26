@@ -130,8 +130,9 @@ blinds managed by the controller are automatically opened.
 
 # Installation
 
-Make sure that the Astronomy module is installed prior to installing this
-module ( https://github.com/maros/Zway-Astronomy )
+Make sure that the Astronomy module and BaseModule is installed prior to 
+installing this module ( https://github.com/maros/Zway-Astronomy and 
+https://github.com/maros/Zway-BaseModule)
 
 ```shell
 cd /opt/z-way-server/automation/modules
