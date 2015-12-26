@@ -100,12 +100,7 @@ BlindControl.prototype.initCallback = function() {
     
     self.allDevices = _.uniq(_.flatten(devices));
     
-    _.each(self.allDevices,function(deviceId) {
-        var deviceObject = self.controller.devices.get(deviceId);
-        if (deviceObject === null) {
-            self.error('Could not find blinds device '+deviceId);
-            return;
-        }
+    self.processDeviceList(self.allDevices,function(deviceObject) {
         var deviceAuto  = deviceObject.get('metrics:auto');
         if (typeof(deviceAuto) === 'undefined') {
             deviceObject.set('metrics:auto',false);
@@ -300,7 +295,7 @@ BlindControl.prototype.moveDevices = function(devices,position) {
             return;
         }
         
-        self.error('Auto move blind '+deviceId+' to '+position);
+        self.log('Auto move blind '+deviceId+' to '+position);
         if (position === 0) {
             deviceObject.set('metrics:auto',true);
             deviceObject.performCommand('off');
