@@ -1,3 +1,15 @@
+1.02 2016 Jan 08, Fri
+    * Rename title/description key to make module work in appstore Update readme
+    * Update documentation
+    * Use BaseModule
+    * Unify variable names
+    * Read probeType
+    * set probe type instead of title
+    * Reverse auto flag
+    * Fix blind position confusion
+    * Check for correct auto device labels
+    * Update category
+
 1.01 2015 Nov 15, Sun
     * Update documentation
     * Cleanups
