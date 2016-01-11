@@ -41,6 +41,7 @@ BlindControl.prototype.init = function (config) {
                 deviceId: "BlindControl_"+type+'_'+ self.id,
                 defaults: {
                     metrics: {
+                        active: [],
                         title: self.langFile[type+'_active_label'],
                         level: 'off',
                         icon: '/ZAutomation/api/v1/load/modulemedia/BlindControl/icon_'+type+'_off.png'
@@ -120,15 +121,18 @@ BlindControl.prototype.initCallback = function() {
 BlindControl.prototype.commandDevice = function(type,command) {
     var self = this;
     
-    if (command === 'on' || command === 'off') {
-        self[type+'Device'].set('metrics:level',command);
-        self[type+'Device'].set('metrics:icon','/ZAutomation/api/v1/load/modulemedia/BlindControl/icon_'+type+'_'+command+'.png');
-    }
+    if (command !== 'on' && command !== 'off') return;
+    
+    self[type+'Device'].set('metrics:level',command);
+    self[type+'Device'].set('metrics:icon','/ZAutomation/api/v1/load/modulemedia/BlindControl/icon_'+type+'_'+command+'.png');
+    
     if (command === 'on') {
         var otherType = (type === 'shade') ? 'insulation':'shade';
         if (typeof(self[otherType+'Device']) !== 'undefined') {
             self[otherType+'Device'].performCommand('off');
         }
+    } else if (command === 'off') {
+        self[type+'Device'].set('metrics:active',[]);
     }
 };
 
@@ -150,26 +154,36 @@ BlindControl.prototype.processInsulationRules = function() {
     var self = this;
     
     var sunAltitude         = self.getSunAltitude();
+    var rulesActive         = self.insulationDevice.get('metrics:active');
     var outsideTemperature  = self.getSensorData('temperatureOutside');
     if (typeof(outsideTemperature) === 'undefined') {
         self.error('Could not find outside temperature sensor');
         return;
     }
     
-    _.each(self.config.insulationRules,function(rule) {
+    _.each(self.config.insulationRules,function(rule,ruleIndex) {
+        var isActive    = rulesActive[ruleIndex] || false;
+        
         // Check sun altitude & temp
         if (outsideTemperature < rule.temperatureOutside && 
             sunAltitude < rule.altitude) {
+            rulesActive[ruleIndex] = true;
             self.moveDevices(rule.devices,rule.position);
         } else if (sunAltitude > rule.altitude) {
+            rulesActive[ruleIndex] = false;
             self.moveDevices(rule.devices,255);
+        } else {
+            return;
         }
+        
+        self.insulationDevice.set('metrics:active',rulesActive);
     });
 };
 
 BlindControl.prototype.processShadeRules = function() {
     var self = this;
     
+    var rulesActive         = self.shadeDevice.get('metrics:active');
     var sunAltitude         = self.getSunAltitude();
     var sunAzimuth          = self.getSunAzimuth();
     var outsideTemperature  = self.getSensorData('temperatureOutside');
@@ -180,9 +194,10 @@ BlindControl.prototype.processShadeRules = function() {
         return;
     }
     
-    _.each(self.config.shadeRules,function(rule) {
+    _.each(self.config.shadeRules,function(rule,ruleIndex) {
         var matchClose      = true;
         var matchPosition   = true;
+        var isActive        = rulesActive[ruleIndex] || false;
         
         if (outsideTemperature < rule.temperatureOutside) {
             matchClose = false;
@@ -229,13 +244,20 @@ BlindControl.prototype.processShadeRules = function() {
         
         // Check sun altitude
         if (matchClose === true
-            && matchPosition === true) {
+            && matchPosition === true
+            && rulesActive[ruleIndex] === false) {
             // Close
+            rulesActive[ruleIndex] = true;
             self.moveDevices(rule.devices,rule.position);
-        } else if (matchPosition === false) {
+        } else if (matchPosition === false
+            && rulesActive[ruleIndex] === true) {
             // Re-open
+            rulesActive[ruleIndex] = false;
             self.moveDevices(rule.devices,255);
+        } else {
+            return;
         }
+        self.shadeDevice.set('metrics:active',rulesActive);
     });
 };
 
