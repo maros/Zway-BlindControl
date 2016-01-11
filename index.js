@@ -153,7 +153,6 @@ BlindControl.prototype.checkConditions = function() {
 BlindControl.prototype.processInsulationRules = function() {
     var self = this;
     
-    var sunAltitude         = self.getSunAltitude();
     var rulesActive         = self.insulationDevice.get('metrics:active');
     var outsideTemperature  = self.getSensorData('temperatureOutside');
     if (typeof(outsideTemperature) === 'undefined') {
@@ -162,14 +161,17 @@ BlindControl.prototype.processInsulationRules = function() {
     }
     
     _.each(self.config.insulationRules,function(rule,ruleIndex) {
+        var inPeriod    = self.checkPeriod(rule.timeFrom,rule.timeTo);
         var isActive    = rulesActive[ruleIndex] || false;
         
         // Check sun altitude & temp
-        if (outsideTemperature < rule.temperatureOutside && 
-            sunAltitude < rule.altitude) {
+        if (outsideTemperature < rule.temperatureOutside 
+            && inPeriod === true
+            && isActive === false) {
             rulesActive[ruleIndex] = true;
             self.moveDevices(rule.devices,rule.position);
-        } else if (sunAltitude > rule.altitude) {
+        } else if (inPeriod === false
+            && isActive === true) {
             rulesActive[ruleIndex] = false;
             self.moveDevices(rule.devices,255);
         } else {

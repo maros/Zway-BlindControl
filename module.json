@@ -23,11 +23,20 @@
          "insulationRules" : {
             "items" : {
                "fields" : {
-                  "altitude" : {
-                     "helper" : "__altitude_insulation_helper__",
-                     "label" : "__altitude_label__",
-                     "order" : 2
-                  },
+                   "timeFrom" : {
+                       "label" : "__time_from_label__",
+                       "maskString" : "99:99",
+                       "order" : 2,
+                       "placeholder" : "__time_placeholder__",
+                       "type" : "time"
+                    },
+                    "timeTo" : {
+                       "label" : "__time_to_label__",
+                       "maskString" : "99:99",
+                       "order" : 3,
+                       "placeholder" : "__time_placeholder__",
+                       "type" : "time"
+                    },
                   "devices" : {
                      "fields" : {
                         "item" : {
@@ -38,11 +47,11 @@
                         }
                      },
                      "label" : "__devices_label__",
-                     "order" : 3
+                     "order" : 4
                   },
                   "position" : {
                      "label" : "__position_label__",
-                     "order" : 4
+                     "order" : 5
                   },
                   "temperatureOutside" : {
                      "helper" : "__temperature_outside_insulation_helper__",
@@ -154,13 +163,18 @@
             "dependencies" : "insulationActive",
             "items" : {
                "properties" : {
-                  "altitude" : {
-                     "default" : -20,
-                     "maximum" : 90,
-                     "minimum" : -90,
-                     "required" : true,
-                     "type" : "number"
-                  },
+                  "timeFrom" : {
+                      "pattern" : "^([01]?[0-9]|2[0-3]):([0-5][0-9])$",
+                      "placeholder" : "__time_placeholder__",
+                      "required" : true,
+                      "type" : "string"
+                   },
+                   "timeTo" : {
+                      "pattern" : "^([01]?[0-9]|2[0-3]):([0-5][0-9])$",
+                      "placeholder" : "__time_placeholder__",
+                      "required" : true,
+                      "type" : "string"
+                   },
                   "devices" : {
                      "items" : {
                         "datasource" : "namespaces",

@@ -1,14 +1,14 @@
 {
-   "altitude_insulation_helper" : "If the sun altitude falls below this level, blinds insulation will be activated",
    "altitude_label" : "Sun altitude",
    "altitude_shade_helper" : "If the sun altitude rises above this level, blinds shading will be activated",
-   "azimuth_left_label" : "Left Azimuth",
    "azimuth_helper" : "If the sun azimuth (between 0 and 360°) is between left and right value, blinds shading will be activated",
+   "azimuth_left_label" : "Left Azimuth",
    "azimuth_right_label" : "Right Azimuth",
-   "m_descr" : "Manage blinds for optimal insulation and shading ",
    "devices_label" : "Blinds",
    "insulation_active_helper" : "Activate insulation when outside temperature falls below a certain level",
    "insulation_active_label" : "Blinds insulation",
+   "m_descr" : "Manage blinds for optimal insulation and shading ",
+   "m_title" : "Blinds control",
    "position_label" : "Blind position",
    "shade_active_helper" : "Use blinds for shading when outside-, inside-temperature and sun intensity rise above a certain level",
    "shade_active_label" : "Blinds shading",
@@ -21,6 +21,8 @@
    "temperature_outside_label" : "Outside temperature",
    "temperature_outside_sensor_label" : "Outside Temperature Sensor",
    "temperature_outside_shade_helper" : "If outside temperature rises above this level shading will be activated",
-   "m_title" : "Blinds control",
+   "time_from_label" : "From",
+   "time_placeholder" : "HH:MM",
+   "time_to_label" : "To",
    "uv_sensor_label" : "UV Sensor"
 }
