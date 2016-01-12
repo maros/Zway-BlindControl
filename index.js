@@ -155,8 +155,11 @@ BlindControl.prototype.processInsulationRules = function() {
     
     var rulesActive         = self.insulationDevice.get('metrics:active');
     var outsideTemperature  = self.getSensorData('temperatureOutside');
-    if (typeof(outsideTemperature) === 'undefined') {
-        self.error('Could not find outside temperature sensor');
+    var foreacastLow        = self.getSensorData('forecastLow') || outsideTemperature;
+    var temperature         = Math.min(outsideTemperature,foreacastLow);
+    
+    if (typeof(temperature) === 'undefined') {
+        self.error('Could not find outside temperature or forecast sensor');
         return;
     }
     
@@ -165,13 +168,15 @@ BlindControl.prototype.processInsulationRules = function() {
         var isActive    = rulesActive[ruleIndex] || false;
         
         // Check sun altitude & temp
-        if (outsideTemperature < rule.temperatureOutside 
+        if (temperature < rule.temperatureOutside 
             && inPeriod === true
             && isActive === false) {
+            self.log('Close blind for insulation');
             rulesActive[ruleIndex] = true;
             self.moveDevices(rule.devices,rule.position);
         } else if (inPeriod === false
             && isActive === true) {
+            self.log('Open blind after insulation');
             rulesActive[ruleIndex] = false;
             self.moveDevices(rule.devices,255);
         } else {

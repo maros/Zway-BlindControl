@@ -5,6 +5,8 @@
    "azimuth_left_label" : "Left Azimuth",
    "azimuth_right_label" : "Right Azimuth",
    "devices_label" : "Blinds",
+   "forecast_high_sensor_label" : "Forecast high",
+   "forecast_low_sensor_label" : "Forecast low",
    "insulation_active_helper" : "Activate insulation when outside temperature falls below a certain level",
    "insulation_active_label" : "Blinds insulation",
    "m_descr" : "Manage blinds for optimal insulation and shading ",

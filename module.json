@@ -124,7 +124,7 @@
             "field" : "devices",
             "label" : "__temperature_inside_sensor_label__",
             "optionLabels" : "namespaces:devices_sensorMultilevel:deviceName",
-            "order" : 7,
+            "order" : 5,
             "type" : "select"
          },
          "temperatureOutsideSensor" : {
@@ -135,12 +135,28 @@
             "order" : 6,
             "type" : "select"
          },
+         "forecastLowSensor" : {
+             "datasource" : "namespaces",
+             "field" : "devices",
+             "label" : "__forecast_low_sensor_label__",
+             "optionLabels" : "namespaces:devices_sensorMultilevel:deviceName",
+             "order" : 7,
+             "type" : "select"
+          },
+          "forecastHighSensor" : {
+              "datasource" : "namespaces",
+              "field" : "devices",
+              "label" : "__forecast_high_sensor_label__",
+              "optionLabels" : "namespaces:devices_sensorMultilevel:deviceName",
+              "order" : 8,
+              "type" : "select"
+           },
          "uvSensor" : {
             "datasource" : "namespaces",
             "field" : "devices",
             "label" : "__uv_sensor_label__",
             "optionLabels" : "namespaces:devices_sensorMultilevel:deviceName",
-            "order" : 5,
+            "order" : 9,
             "type" : "select"
          }
       }
@@ -274,6 +290,16 @@
             "field" : "enum",
             "required" : true
          },
+         "forecastLowSensor" : {
+             "datasource" : "namespaces",
+             "enum" : "namespaces:devices_sensorMultilevel:deviceId",
+             "field" : "enum"
+          },
+          "forecastHighSensor" : {
+              "datasource" : "namespaces",
+              "enum" : "namespaces:devices_sensorMultilevel:deviceId",
+              "field" : "enum"
+           },
          "uvSensor" : {
             "datasource" : "namespaces",
             "enum" : "namespaces:devices_sensorMultilevel:deviceId",
