@@ -10,7 +10,7 @@
    "forecast_optional_helper" : "Optional. Will use current outside temperature if not proviced.",
    "insulation_active_helper" : "Activate insulation when outside temperature falls below a certain level",
    "insulation_active_label" : "Blinds insulation",
-   "m_descr" : "Manage blinds for optimal insulation and shading \nCheck https://github.com/maros/Zway-BlindControl//blob/master/README.md for detailed documentation.",
+   "m_descr" : "Manage blinds for optimal insulation and shading <br>Check  <a href=\"https://github.com/maros/Zway-BlindControl/blob/master/README.md\">github.com/maros/Zway-BlindControl</a> for detailed documentation.",
    "m_title" : "Blinds control",
    "position_label" : "Blind position",
    "shade_active_helper" : "Use blinds for shading when outside-, inside-temperature and sun intensity rise above a certain level",
