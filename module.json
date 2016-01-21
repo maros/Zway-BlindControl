@@ -139,6 +139,7 @@
              "datasource" : "namespaces",
              "field" : "devices",
              "label" : "__forecast_low_sensor_label__",
+             "helper" : "__forecast_optional_helper__",
              "optionLabels" : "namespaces:devices_sensorMultilevel:deviceName",
              "order" : 7,
              "type" : "select"
@@ -147,6 +148,7 @@
               "datasource" : "namespaces",
               "field" : "devices",
               "label" : "__forecast_high_sensor_label__",
+              "helper" : "__forecast_optional_helper__",
               "optionLabels" : "namespaces:devices_sensorMultilevel:deviceName",
               "order" : 8,
               "type" : "select"
