@@ -1,3 +1,13 @@
+1.03 2016 Jan 22, Fri
+    * Use forecast for blind shade
+    * Improve german translation
+    * Update config helper
+    * Basic german translation
+    * Add doc link
+    * Add forecast temp devices
+    * Use time instead of solar altitude to handle insulation
+    * Remember active shade/insulation rules
+
 1.02 2016 Jan 08, Fri
     * Rename title/description key to make module work in appstore Update readme
     * Update documentation

@@ -15,6 +15,24 @@
    "moduleName" : "BlindControl",
    "options" : {
       "fields" : {
+         "forecastHighSensor" : {
+            "datasource" : "namespaces",
+            "field" : "devices",
+            "helper" : "__forecast_optional_helper__",
+            "label" : "__forecast_high_sensor_label__",
+            "optionLabels" : "namespaces:devices_sensorMultilevel:deviceName",
+            "order" : 8,
+            "type" : "select"
+         },
+         "forecastLowSensor" : {
+            "datasource" : "namespaces",
+            "field" : "devices",
+            "helper" : "__forecast_optional_helper__",
+            "label" : "__forecast_low_sensor_label__",
+            "optionLabels" : "namespaces:devices_sensorMultilevel:deviceName",
+            "order" : 7,
+            "type" : "select"
+         },
          "insulationActive" : {
             "helper" : "__insulation_active_helper__",
             "label" : "__insulation_active_label__",
@@ -23,20 +41,6 @@
          "insulationRules" : {
             "items" : {
                "fields" : {
-                   "timeFrom" : {
-                       "label" : "__time_from_label__",
-                       "maskString" : "99:99",
-                       "order" : 2,
-                       "placeholder" : "__time_placeholder__",
-                       "type" : "time"
-                    },
-                    "timeTo" : {
-                       "label" : "__time_to_label__",
-                       "maskString" : "99:99",
-                       "order" : 3,
-                       "placeholder" : "__time_placeholder__",
-                       "type" : "time"
-                    },
                   "devices" : {
                      "fields" : {
                         "item" : {
@@ -57,6 +61,20 @@
                      "helper" : "__temperature_outside_insulation_helper__",
                      "label" : "__temperature_outside_label__",
                      "order" : 1
+                  },
+                  "timeFrom" : {
+                     "label" : "__time_from_label__",
+                     "maskString" : "99:99",
+                     "order" : 2,
+                     "placeholder" : "__time_placeholder__",
+                     "type" : "time"
+                  },
+                  "timeTo" : {
+                     "label" : "__time_to_label__",
+                     "maskString" : "99:99",
+                     "order" : 3,
+                     "placeholder" : "__time_placeholder__",
+                     "type" : "time"
                   }
                }
             },
@@ -135,24 +153,6 @@
             "order" : 6,
             "type" : "select"
          },
-         "forecastLowSensor" : {
-             "datasource" : "namespaces",
-             "field" : "devices",
-             "label" : "__forecast_low_sensor_label__",
-             "helper" : "__forecast_optional_helper__",
-             "optionLabels" : "namespaces:devices_sensorMultilevel:deviceName",
-             "order" : 7,
-             "type" : "select"
-          },
-          "forecastHighSensor" : {
-              "datasource" : "namespaces",
-              "field" : "devices",
-              "label" : "__forecast_high_sensor_label__",
-              "helper" : "__forecast_optional_helper__",
-              "optionLabels" : "namespaces:devices_sensorMultilevel:deviceName",
-              "order" : 8,
-              "type" : "select"
-           },
          "uvSensor" : {
             "datasource" : "namespaces",
             "field" : "devices",
@@ -173,6 +173,16 @@
          "shadeRules" : "shadeActive"
       },
       "properties" : {
+         "forecastHighSensor" : {
+            "datasource" : "namespaces",
+            "enum" : "namespaces:devices_sensorMultilevel:deviceId",
+            "field" : "enum"
+         },
+         "forecastLowSensor" : {
+            "datasource" : "namespaces",
+            "enum" : "namespaces:devices_sensorMultilevel:deviceId",
+            "field" : "enum"
+         },
          "insulationActive" : {
             "default" : false,
             "type" : "boolean"
@@ -181,18 +191,6 @@
             "dependencies" : "insulationActive",
             "items" : {
                "properties" : {
-                  "timeFrom" : {
-                      "pattern" : "^([01]?[0-9]|2[0-3]):([0-5][0-9])$",
-                      "placeholder" : "__time_placeholder__",
-                      "required" : true,
-                      "type" : "string"
-                   },
-                   "timeTo" : {
-                      "pattern" : "^([01]?[0-9]|2[0-3]):([0-5][0-9])$",
-                      "placeholder" : "__time_placeholder__",
-                      "required" : true,
-                      "type" : "string"
-                   },
                   "devices" : {
                      "items" : {
                         "datasource" : "namespaces",
@@ -212,6 +210,18 @@
                   },
                   "temperatureOutside" : {
                      "type" : "number"
+                  },
+                  "timeFrom" : {
+                     "pattern" : "^([01]?[0-9]|2[0-3]):([0-5][0-9])$",
+                     "placeholder" : "__time_placeholder__",
+                     "required" : true,
+                     "type" : "string"
+                  },
+                  "timeTo" : {
+                     "pattern" : "^([01]?[0-9]|2[0-3]):([0-5][0-9])$",
+                     "placeholder" : "__time_placeholder__",
+                     "required" : true,
+                     "type" : "string"
                   }
                },
                "type" : "object"
@@ -292,16 +302,6 @@
             "field" : "enum",
             "required" : true
          },
-         "forecastLowSensor" : {
-             "datasource" : "namespaces",
-             "enum" : "namespaces:devices_sensorMultilevel:deviceId",
-             "field" : "enum"
-          },
-          "forecastHighSensor" : {
-              "datasource" : "namespaces",
-              "enum" : "namespaces:devices_sensorMultilevel:deviceId",
-              "field" : "enum"
-           },
          "uvSensor" : {
             "datasource" : "namespaces",
             "enum" : "namespaces:devices_sensorMultilevel:deviceId",
@@ -312,5 +312,5 @@
       "type" : "object"
    },
    "singleton" : false,
-   "version" : 1.02
+   "version" : 1.03
 }
