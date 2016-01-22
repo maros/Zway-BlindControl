@@ -180,6 +180,7 @@ BlindControl.prototype.processInsulationRules = function() {
             rulesActive[ruleIndex] = false;
             self.moveDevices(rule.devices,255);
         } else {
+            self.log('Nothing to do. active:'+isActive+' period:'+inPeriod+' temp:'+temperature);
             return;
         }
         
@@ -194,10 +195,13 @@ BlindControl.prototype.processShadeRules = function() {
     var sunAltitude         = self.getSunAltitude();
     var sunAzimuth          = self.getSunAzimuth();
     var outsideTemperature  = self.getSensorData('temperatureOutside');
+    var forecastHigh        = self.getSensorData('forecastHigh') || outsideTemperature;
     var insideTemperature   = self.getSensorData('temperatureInside');
     var uvIndex             = self.getSensorData('uv');
-    if (typeof(outsideTemperature) === 'undefined') {
-        self.error('Could not find outside temperature sensor');
+    var temperature         = Math.max(outsideTemperature,forecastHigh);
+    
+    if (typeof(temperature) === 'undefined') {
+        self.error('Could not find outside temperature or forecast sensor');
         return;
     }
     
@@ -206,7 +210,8 @@ BlindControl.prototype.processShadeRules = function() {
         var matchPosition   = true;
         var isActive        = rulesActive[ruleIndex] || false;
         
-        if (outsideTemperature < rule.temperatureOutside) {
+        // Check outside temperature
+        if (temperature < rule.temperatureOutside) {
             matchClose = false;
         }
         
@@ -223,7 +228,6 @@ BlindControl.prototype.processShadeRules = function() {
         
         // Check UV
         if (typeof(rule.sunUv) !== 'undefined') {
-            
             if (typeof(uvIndex) === 'undefined') {
                 self.error('Could not find UV sensor');
                 return;
@@ -233,6 +237,7 @@ BlindControl.prototype.processShadeRules = function() {
             }
         }
         
+        // Check solar altitude
         if (sunAltitude < rule.altitude) {
             matchPosition = false;
         } else if (
