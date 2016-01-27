@@ -306,8 +306,10 @@ BlindControl.prototype.processAlarm = function(event) {
     });
 };
 
-BlindControl.prototype.moveDevices = function(devices,position) {
+BlindControl.prototype.moveDevices = function(devices,targetPos) {
     var self = this;
+    
+    self.log('Move devices to '+targetPos);
     
     _.each(devices,function(deviceId) {
         var deviceObject = self.controller.devices.get(deviceId);
@@ -319,26 +321,26 @@ BlindControl.prototype.moveDevices = function(devices,position) {
         var devicePos   = deviceObject.get('metrics:level');
         
         // Open
-        if (position >= 99 && (devicePos >= 99 || deviceAuto === false)) {
+        if (targetPos >= 99 && (devicePos >= 99 || deviceAuto === false)) {
             if (deviceAuto === true) {
                 //deviceObject.set('metrics:auto',false);
             }
             return;
         // Close
-        } else if  (position < 99 && (devicePos < 99 || deviceAuto === true)) {
+        } else if  (targetPos < 99 && (devicePos < 99 || deviceAuto === true)) {
             return;
         }
         
-        self.log('Auto move blind '+deviceId+' to '+position);
-        if (position === 0) {
+        self.log('Auto move blind '+deviceId+' to '+targetPos);
+        if (targetPos === 0) {
             deviceObject.set('metrics:auto',true);
             deviceObject.performCommand('off');
-        } else if (position >= 99) {
+        } else if (targetPos >= 99) {
             deviceObject.set('metrics:auto',false);
             deviceObject.performCommand('on');
         } else {
             deviceObject.set('metrics:auto',true);
-            deviceObject.performCommand('exact',{ level: position });
+            deviceObject.performCommand('exact',{ level: targetPos });
         }
     });
 };
