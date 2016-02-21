@@ -13,7 +13,11 @@ function BlindControl (id, controller) {
     // Call superconstructor first (AutomationModule)
     BlindControl.super_.call(this, id, controller);
 
-    this.shadeDevice        = undefined;
+    this.modes              = ['shade','insulation'];
+    _.each(this.modes,function(type) {
+        this[type+'Device'] = undefined;
+    });
+    
     this.insulationDevice   = undefined;
     this.interval           = undefined;
     this.sunDevice          = undefined;
@@ -35,7 +39,7 @@ BlindControl.prototype.init = function (config) {
     var self = this;
     
     // Create vdev
-    _.each(['shade','insulation'],function(type) {
+    _.each(self.modes,function(type) {
         if (config[type+'Active'] === true) {
             self[type+'Device'] = this.controller.devices.create({
                 deviceId: "BlindControl_"+type+'_'+ self.id,
@@ -68,7 +72,7 @@ BlindControl.prototype.init = function (config) {
 BlindControl.prototype.stop = function () {
     var self = this;
     
-    _.each(['shade','insulation'],function(type) {
+    _.each(self.modes,function(type) {
         var key = type+'Device';
         if (typeof(self[key]) !== 'undefined') {
             self.controller.devices.remove(self[key].id);
