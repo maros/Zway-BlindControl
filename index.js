@@ -64,6 +64,7 @@ BlindControl.prototype.init = function (config) {
     self.alarmCallback = _.bind(self.processAlarm,self);
     self.controller.on('security.smoke.alarm',self.alarmCallback);
     self.controller.on('security.smoke.cancel',self.alarmCallback);
+    self.controller.on('security.smoke.stop',self.alarmCallback);
     
     self.interval = setInterval(_.bind(self.checkConditions,self),1000*60*3);
     setTimeout(_.bind(self.initCallback,self),1000*60);
@@ -87,6 +88,8 @@ BlindControl.prototype.stop = function () {
     
     self.controller.off('security.smoke.alarm',self.alarmCallback);
     self.controller.off('security.smoke.cancel',self.alarmCallback);
+    self.controller.off('security.smoke.stop',self.alarmCallback);
+
     self.alarmCallback = undefined;
     
     BlindControl.super_.prototype.stop.call(this);
