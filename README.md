@@ -19,14 +19,16 @@ solar intensity) match, and the sun shines into a particular window
 (calculated based on altitude and azimuth). The blinds will stay closed until
 the sun has moved out of the slected area (regardless of the temperature) - 
 either because it set below the selected altitude, or because it does not 
-match the selected azimuth angles. In insulation mode the blinds will be 
+match the selected azimuth angles.
+
+In insulation mode the blinds will be 
 closed if the temperature and the altitude fall below a certain level. Blinds 
 will be reopened once the solar altitude rises above the selected level.
 
 # Configuration
 
 This module depends on the Astronomy module from 
-https://github.com/maros/Zway-Astronomy for calculatin the solar position.
+https://github.com/maros/Zway-Astronomy for calculating the solar position.
 
 ## shade_active
 
@@ -50,7 +52,7 @@ be activated (optional)
 ## shade_rules.sun_uv
 
 If the UV index rises above the selected level, this rule will
-be activated (optional)
+be activated (optional).
 
 ## shade_rules.azimuth_left, shade_rules.azimuth_right
 
@@ -59,19 +61,19 @@ these two angles.
 
 ## shade_rules.altitude
 
-Activate rule if sun rises above the selected altitude.
+Activate rule if sun rises above the selected altitude. (0-90°)
 
 ## shade_rules.devices
 
-A list of all blinds and shaded managed by this rule
+A list of all blinds and shades managed by this rule
 
 ## shade_rules.position
 
-Desired closing position (0-255)
+Desired closing position (0-99)
 
 ## insulation_active
 
-Configures if low-temperature shade insulation should be activated.
+Sets if low-temperature shade insulation mode should be activated.
 
 ## insulation_rules
 
@@ -89,11 +91,11 @@ Activate rule if sun falls below the selected altitude.
 
 ## insulation_rules.devices
 
-A list of all blinds and shaded managed by this rule
+A list of all blinds and shades managed by this rule.
 
 ## insulation_rules.position
 
-Desired closing position (0-255)
+Desired closing position (0-99)
 
 ## uv_sensor
 
