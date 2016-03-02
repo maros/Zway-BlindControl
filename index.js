@@ -298,12 +298,7 @@ BlindControl.prototype.processAlarm = function(event) {
         self.log('Opening all blinds due to smoke alarm');
     }
     
-    _.each(self.allDevices,function(deviceId) {
-        var deviceObject = self.controller.devices.get(deviceId);
-        if (deviceObject === null) {
-            self.error('Could not find blinds device '+deviceId);
-            return;
-        }
+    self.processDeviceList(self.allDevices,function(deviceObject) {
         if (alarmed) {
             deviceObject.set('metrics:auto',true);
             deviceObject.performCommand('on');
@@ -318,12 +313,7 @@ BlindControl.prototype.moveDevices = function(devices,targetPos) {
     
     self.log('Move devices to '+targetPos);
     
-    _.each(devices,function(deviceId) {
-        var deviceObject = self.controller.devices.get(deviceId);
-        if (deviceObject === null) {
-            self.error('Could not find blinds device '+deviceId);
-            return;
-        }
+    self.processDeviceList(devices,function(deviceObject) {
         var deviceAuto  = deviceObject.get('metrics:auto');
         var devicePos   = deviceObject.get('metrics:level');
         
