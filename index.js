@@ -282,6 +282,9 @@ BlindControl.prototype.processAlarm = function(event) {
     var self = this;
     
     var alarmed = true;
+    
+    console.logJS(event);
+    // TODO check event type
     self.controller.devices.each(function(vDev) {
         if (vDev.get('probeType') === 'SecurityZone'
             && vDev.get('metrics:securityType') === 'smoke') {
@@ -326,7 +329,7 @@ BlindControl.prototype.moveDevices = function(devices,targetPos) {
             return;
         }
         
-        self.log('Auto move blind '+deviceId+' to '+targetPos);
+        self.log('Auto move blind '+deviceObject.id+' to '+targetPos);
         if (targetPos === 0) {
             deviceObject.set('metrics:auto',true);
             deviceObject.performCommand('off');
