@@ -1,3 +1,12 @@
+1.04 2016 Mar 08, Tue
+    * Fix wrong variable
+    * Fix event names
+    * Use helper to loop all devices
+    * Listen to stop smoke event
+    * Update installation howto
+    * Cleanup modes
+    * Clarify variable name
+
 1.03 2016 Jan 22, Fri
     * Use forecast for blind shade
     * Improve german translation
