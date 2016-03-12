@@ -48,7 +48,7 @@ BlindControl.prototype.init = function (config) {
                         active: [],
                         title: self.langFile[type+'_active_label'],
                         level: 'off',
-                        icon: '/ZAutomation/api/v1/load/modulemedia/BlindControl/icon_'+type+'_off.png'
+                        icon: self.imagePath+'/icon_'+type+'_off.png'
                     }
                 },
                 handler: _.bind(self.commandDevice,self,type),
@@ -129,7 +129,7 @@ BlindControl.prototype.commandDevice = function(type,command) {
     if (command !== 'on' && command !== 'off') return;
     
     self[type+'Device'].set('metrics:level',command);
-    self[type+'Device'].set('metrics:icon','/ZAutomation/api/v1/load/modulemedia/BlindControl/icon_'+type+'_'+command+'.png');
+    self[type+'Device'].set('metrics:icon',self.imagePath+'icon_'+type+'_'+command+'.png');
     
     if (command === 'on') {
         var otherType = (type === 'shade') ? 'insulation':'shade';
