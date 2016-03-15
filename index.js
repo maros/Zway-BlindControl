@@ -129,7 +129,7 @@ BlindControl.prototype.commandDevice = function(type,command) {
     if (command !== 'on' && command !== 'off') return;
     
     self[type+'Device'].set('metrics:level',command);
-    self[type+'Device'].set('metrics:icon',self.imagePath+'icon_'+type+'_'+command+'.png');
+    self[type+'Device'].set('metrics:icon',self.imagePath+'/icon_'+type+'_'+command+'.png');
     
     if (command === 'on') {
         var otherType = (type === 'shade') ? 'insulation':'shade';
