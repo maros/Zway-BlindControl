@@ -320,12 +320,15 @@ BlindControl.prototype.moveDevices = function(devices,targetPos) {
         
         // Open
         if (targetPos >= 99 && (devicePos >= 99 || deviceAuto === false)) {
+            self.log('Ignoring device open. Already at '+devicePos+' or not auto');
             if (deviceAuto === true) {
+                // TODO reset auto?
                 //deviceObject.set('metrics:auto',false);
             }
             return;
         // Close
         } else if  (targetPos < 99 && (devicePos < 99 || deviceAuto === true)) {
+            self.log('Ignoring device close. Already at '+devicePos+' or aleray auto');
             return;
         }
         
