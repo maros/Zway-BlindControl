@@ -23,7 +23,7 @@
    "temperature_outside_insulation_helper" : "Wenn der Vorhersage Tiefstwert oder die Aussentemperatur unter den angegebenen Wert fällt wird die Isolation durch Jalousien aktiviert.",
    "temperature_outside_label" : "Aussentemperatur",
    "temperature_outside_sensor_label" : "Aussentemperatur Modul",
-   "temperature_outside_shade_helper" : "MISSINGIf outside temperature rises above this level shading will be activated",
+   "temperature_outside_shade_helper" : "Wenn die Aussentemperatur über die eingestellte Temperatur steigt wird die Beschattung aktiviert",
    "time_from_label" : "Von",
    "time_placeholder" : "HH:MM",
    "time_to_label" : "Bis",
