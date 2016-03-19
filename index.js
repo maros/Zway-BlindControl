@@ -128,15 +128,25 @@ BlindControl.prototype.commandDevice = function(type,command) {
     
     if (command !== 'on' && command !== 'off') return;
     
-    self[type+'Device'].set('metrics:level',command);
-    self[type+'Device'].set('metrics:icon',self.imagePath+'/icon_'+type+'_'+command+'.png');
+    self.log('Turn blind control '+command);
+    var device = self[type+'Device'];
+    device.set('metrics:level',command);
+    device.set('metrics:icon',self.imagePath+'/icon_'+type+'_'+command+'.png');
     
     if (command === 'on') {
         var otherType = (type === 'shade') ? 'insulation':'shade';
-        if (typeof(self[otherType+'Device']) !== 'undefined') {
-            self[otherType+'Device'].performCommand('off');
+        var otherDevice = self[otherType+'Device'];
+        if (typeof(otherDevice) !== 'undefined') {
+            otherDevice.performCommand('off');
         }
     } else if (command === 'off') {
+        var active = device.get('metrics:active',command);
+        // TODO re-open all blinds?
+        _.each(self.config[type+'Rules'],function(rule,ruleIndex) {
+            if (active[ruleIndex] === true) {
+                self.moveDevices(rule.devices,255);
+            }
+        });
         self[type+'Device'].set('metrics:active',[]);
     }
 };
