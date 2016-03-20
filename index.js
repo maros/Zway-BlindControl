@@ -359,14 +359,14 @@ BlindControl.prototype.moveDevices = function(devices,targetPos) {
 BlindControl.prototype.getSunAzimuth = function() {
     var self = this;
     return self.getDeviceValue([
-        ['metrics:probeTitle','=','Astronomy']
+        ['probeType','=','astronomy_sun_altitude']
     ],'metrics:azimuth');
 };
 
 BlindControl.prototype.getSunAltitude = function() {
     var self = this;
     return self.getDeviceValue([
-        ['metrics:probeTitle','=','Astronomy']
+        ['probeType','=','astronomy_sun_altitude']
     ],'metrics:altitude');
 };
 
