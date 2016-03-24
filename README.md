@@ -1,8 +1,8 @@
 # Zway-BlindControl
 
 Manages blinds and shades for optimal shading when hot, and insulation when
-cold. A virtual device will be created for each selected operations mode,
-that can fully disable blind control actions.
+cold. A virtual device will be created for each selected operation mode,
+that can disable blind control actions.
 
 It is possible to create multiple rules that manage several devices (eg. in 
 different rooms). Rules can be created based on
@@ -17,18 +17,19 @@ The module supports two operation modes: Shading and insulation. For shading
 blinds will be closed once all preconditions (in- and outside temperature and
 solar intensity) match, and the sun shines into a particular window
 (calculated based on altitude and azimuth). The blinds will stay closed until
-the sun has moved out of the slected area (regardless of the temperature) - 
+the sun moves out of the selected area (regardless of the temperature) - 
 either because it set below the selected altitude, or because it does not 
-match the selected azimuth angles.
+match the selected azimuth angles anymore.
 
-In insulation mode the blinds will be 
-closed if the temperature and the altitude fall below a certain level. Blinds 
-will be reopened once the solar altitude rises above the selected level.
+In insulation mode the blinds will be closed if the temperature and the 
+altitude fall below a certain level. Blinds will be reopened once the solar 
+altitude rises above the selected level.
 
 # Configuration
 
 This module depends on the Astronomy module from 
-https://github.com/maros/Zway-Astronomy for calculating the solar position.
+https://github.com/maros/Zway-Astronomy for calculating the solar azimuth
+ana altitude.
 
 ## shade_active
 
