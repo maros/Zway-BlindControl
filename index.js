@@ -53,7 +53,7 @@ BlindControl.prototype.init = function (config) {
                 },
                 handler: _.bind(self.commandDevice,self,type),
                 overlay: {
-                    probeType: 'BlindController',
+                    probeType: 'controller_blind',
                     deviceType: 'switchBinary'
                 },
                 moduleId: self.id
@@ -296,7 +296,7 @@ BlindControl.prototype.processAlarm = function(event) {
     console.logJS(event);
     // TODO check event type
     self.controller.devices.each(function(vDev) {
-        if (vDev.get('probeType') === 'SecurityZone'
+        if (vDev.get('probeType') === 'security_zone'
             && vDev.get('metrics:securityType') === 'smoke') {
             var state = vDev.get('metrics:state');
             if (state !== 'alarm' && state !== 'timeout') {
