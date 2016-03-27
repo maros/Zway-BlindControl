@@ -53,7 +53,7 @@ BlindControl.prototype.init = function (config) {
                 },
                 handler: _.bind(self.commandDevice,self,type),
                 overlay: {
-                    probeType: 'controller_blind',
+                    probeType: 'controller_blind_'+type,
                     deviceType: 'switchBinary'
                 },
                 moduleId: self.id
