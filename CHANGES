@@ -1,3 +1,13 @@
+1.05 2016 Apr 20, Wed
+    * Fix time fields in module.json
+    * Update readme
+    * Set probeType
+    * Cleanup device switching
+    * More logging
+    * Translation
+    * Fix icon path
+    * Use imagePath from BaseModule
+
 1.04 2016 Mar 08, Tue
     * Fix wrong variable
     * Fix event names
