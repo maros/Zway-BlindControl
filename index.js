@@ -179,13 +179,18 @@ BlindControl.prototype.processInsulationRules = function() {
     }
     
     _.each(self.config.insulationRules,function(rule,ruleIndex) {
-        var inPeriod    = self.checkPeriod(rule.timeFrom,rule.timeTo);
-        var isActive    = rulesActive[ruleIndex] || false;
+        var isActive        = rulesActive[ruleIndex] || false;
+        var timeFrom        = self.parseTime(rule.timeFrom);
+        var timeTo          = self.parseTime(rule.timeTo);
+        var inPeriod        = self.checkPeriod(timeFrom,timeTo);
+        timeTo.setSeconds((timeFrom-timeTo)/2);
+        var inPeriodStart   = self.checkPeriod(timeFrom,timeTo);
         
         // Check sun altitude & temp
         if (temperature < rule.temperatureOutside 
             && inPeriod === true
-            && isActive === false) {
+            && isActive === false
+            && inPeriodStart === true ) {
             self.log('Close blind for insulation');
             rulesActive[ruleIndex] = true;
             self.moveDevices(rule.devices,rule.position);
