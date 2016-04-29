@@ -296,7 +296,7 @@ BlindControl.prototype.processAlarm = function(event) {
     console.logJS(event);
     // TODO check event type
     self.controller.devices.each(function(vDev) {
-        if (vDev.get('probeType') === 'security_zone'
+        if (vDev.get('probeType') === 'controller_security'
             && vDev.get('metrics:securityType') === 'smoke') {
             var state = vDev.get('metrics:state');
             if (state !== 'alarm' && state !== 'timeout') {
