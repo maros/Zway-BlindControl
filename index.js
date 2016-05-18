@@ -263,7 +263,7 @@ BlindControl.prototype.processShadeRules = function() {
         } else if (
                 (
                     rule.azimuthLeft < rule.azimuthRight && 
-                    (sunAzimuth < shade.azimuthLeft || sunAzimuth > rule.azimuthRight)
+                    (sunAzimuth < rule.azimuthLeft || sunAzimuth > rule.azimuthRight)
                 ) ||
                 (
                     rule.azimuthLeft > rule.azimuthRight && 
