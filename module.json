@@ -3,7 +3,9 @@
    "category" : "complex_applications",
    "defaults" : {
       "description" : "__m_descr__",
-      "title" : "__m_title__"
+      "title" : "__m_title__",
+      "insulationRules": [],
+      "shadeRules": []
    },
    "dependencies" : [
       "Astronomy",
@@ -191,6 +193,10 @@
          },
          "insulationRules" : {
             "dependencies" : "insulationActive",
+            "defaults" : {
+                "position": 0,
+                "temperatureOutside": 0
+            },
             "items" : {
                "properties" : {
                   "devices" : {
@@ -235,6 +241,11 @@
          },
          "shadeRules" : {
             "dependencies" : "shadeActive",
+            "defaults" : {
+                "position": 0,
+                "temperatureInside": 24,
+                "temperatureOutside": 24
+            },
             "items" : {
                "properties" : {
                   "altitude" : {
