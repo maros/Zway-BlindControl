@@ -10,7 +10,7 @@
    "forecast_optional_helper" : "Optional. Falls nicht gesetzt, wird die aktuelle Aussentemperatur verwendet",
    "insulation_active_helper" : "Aktiviert Isolation durch Jalousien wenn die Vorhersage Tiefstwert oder die Aussentemperatur im einstellten Zeitraum unter den anagegebenen Wert fällt",
    "insulation_active_label" : "Jalousien Isolation",
-   "m_descr" : "Steuert Jalousien für optimale Beschattung und Isolation abhängig von der Temperatur.<br>Siehe <a href=https://github.com/maros/Zway-BlindControl/blob/master/README.md>github.com/maros/Zway-BlindControl</a> für detailliertere Dokumentation.",
+   "m_descr" : "Steuert Jalousien für optimale Beschattung und Isolation abhängig von der Temperatur, Sonnenstand und Sonnenintensität.<br>Siehe <a href=https://github.com/maros/Zway-BlindControl/blob/master/README.md>github.com/maros/Zway-BlindControl</a> für detailliertere Dokumentation.",
    "m_title" : "Jalousien Steuerung",
    "position_label" : "Jalousien Position",
    "shade_active_helper" : "Aktiviert optimale Beschattung durch Jalousien abhängig vom Sonnenstand, Sonnenintensitär, Innen- und Aussentemperaruren.",
