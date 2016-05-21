@@ -155,11 +155,11 @@ BlindControl.prototype.checkConditions = function() {
     var self = this;
 
     self.log('Evaluating blind positions');
-    if (self.config.insulationActive == true && 
+    if (self.config.insulationActive === true && 
         self.insulationDevice.get('metrics:level') === 'on') {
         self.processInsulationRules();
     }
-    if (self.config.shadeActive == true && 
+    if (self.config.shadeActive === true && 
         self.shadeDevice.get('metrics:level') === 'on') {
         self.processShadeRules();
     }
@@ -264,15 +264,18 @@ BlindControl.prototype.processShadeRules = function() {
         if (sunAltitude < rule.altitude) {
             self.log('Zone '+ruleIndex+'. Sun altitude too low ('+sunAltitude+'). Not closing');
             matchPosition = false;
-        } else if (
+        } else if (! 
                 (
-                    rule.azimuthLeft < rule.azimuthRight && 
-                    (sunAzimuth < rule.azimuthLeft || sunAzimuth > rule.azimuthRight)
-                ) ||
-                (
-                    rule.azimuthLeft > rule.azimuthRight && 
-                    sunAzimuth > rule.azimuthLeft && 
-                    sunAzimuth < rule.azimuthRight
+                    (
+                        (rule.azimuthLeft > rule.azimuthRight) && 
+                        (sunAzimuth > rule.azimuthLeft || sunAzimuth < rule.azimuthRight)
+                    )
+                    ||
+                    (
+                        rule.azimuthLeft < rule.azimuthRight && 
+                        sunAzimuth > rule.azimuthLeft && 
+                        sunAzimuth < rule.azimuthRight
+                    )
                 )
             ) {
             self.log('Zone '+ruleIndex+'. Sun azimuth autside of range ('+sunAzimuth+'). Not closing');
@@ -282,12 +285,13 @@ BlindControl.prototype.processShadeRules = function() {
         // Check sun altitude
         if (matchClose === true
             && matchPosition === true
-            && rulesActive[ruleIndex] === false) {
+            && isActive === false) {
             // Close
+            self.log('Zone '+ruleIndex+'. Closing');
             rulesActive[ruleIndex] = true;
             self.moveDevices(rule.devices,rule.position);
         } else if (matchPosition === false
-            && rulesActive[ruleIndex] === true) {
+            && isActive === true) {
             // Re-open
             self.log('Zone '+ruleIndex+'. Opening');
             rulesActive[ruleIndex] = false;
