@@ -128,7 +128,7 @@ BlindControl.prototype.commandDevice = function(type,command) {
     
     if (command !== 'on' && command !== 'off') return;
     
-    self.log('Turn blind control '+command);
+    self.log('Turn '+type+' blind control '+command);
     var device = self[type+'Device'];
     device.set('metrics:level',command);
     device.set('metrics:icon',self.imagePath+'/icon_'+type+'_'+command+'.png');
@@ -232,7 +232,7 @@ BlindControl.prototype.processShadeRules = function() {
         
         // Check outside temperature
         if (temperature < rule.temperatureOutside) {
-            self.log('Outside temperature too low  ('+temperature+'). Not closing');
+            self.log('Zone '+ruleIndex+'. Outside temperature too low  ('+temperature+'). Not closing');
             matchClose = false;
         }
         
@@ -243,7 +243,7 @@ BlindControl.prototype.processShadeRules = function() {
                 return;
             }
             if (insideTemperature < rule.temperatureInside) {
-                self.log('Inside temperature too low ('+insideTemperature+'). Not closing');
+                self.log('Zone '+ruleIndex+'. Inside temperature too low ('+insideTemperature+'). Not closing');
                 matchClose = false;
             }
         }
@@ -251,19 +251,19 @@ BlindControl.prototype.processShadeRules = function() {
         // Check UV
         if (typeof(rule.sunUv) !== 'undefined') {
             if (typeof(uvIndex) === 'undefined') {
-                self.error('Could not find UV sensor');
+                self.error('Zone '+ruleIndex+'. Could not find UV sensor');
                 return;
             }
             if (uvIndex < rule.sunUv) {
-                self.log('UV Index too low ('+uvIndex+'). Not closing');
+                self.log('Zone '+ruleIndex+'. UV Index too low ('+uvIndex+'). Not closing');
                 matchClose = false;
             }
         }
         
         // Check solar altitude
         if (sunAltitude < rule.altitude) {
+            self.log('Zone '+ruleIndex+'. Sun altitude too low ('+sunAltitude+'). Not closing');
             matchPosition = false;
-            self.log('Sun altitude too low ('+sunAltitude+'). Not closing');
         } else if (
                 (
                     rule.azimuthLeft < rule.azimuthRight && 
@@ -275,7 +275,7 @@ BlindControl.prototype.processShadeRules = function() {
                     sunAzimuth < rule.azimuthRight
                 )
             ) {
-            self.log('Sun azimuth autside of range ('+sunAzimuth+'). Not closing');
+            self.log('Zone '+ruleIndex+'. Sun azimuth autside of range ('+sunAzimuth+'). Not closing');
             matchPosition = false;
         }
         
@@ -289,9 +289,11 @@ BlindControl.prototype.processShadeRules = function() {
         } else if (matchPosition === false
             && rulesActive[ruleIndex] === true) {
             // Re-open
+            self.log('Zone '+ruleIndex+'. Opening');
             rulesActive[ruleIndex] = false;
             self.moveDevices(rule.devices,255);
         } else {
+            self.log('Zone '+ruleIndex+'. Nothing to do. active:'+isActive+' position:'+matchPosition+' close:'+matchClose);
             return;
         }
         self.shadeDevice.set('metrics:active',rulesActive);
