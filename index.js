@@ -155,11 +155,11 @@ BlindControl.prototype.checkConditions = function() {
     var self = this;
 
     self.log('Evaluating blind positions');
-    if (self.config.insulationActive && 
+    if (self.config.insulationActive == true && 
         self.insulationDevice.get('metrics:level') === 'on') {
         self.processInsulationRules();
     }
-    if (self.config.shadeActive && 
+    if (self.config.shadeActive == true && 
         self.shadeDevice.get('metrics:level') === 'on') {
         self.processShadeRules();
     }
@@ -232,6 +232,7 @@ BlindControl.prototype.processShadeRules = function() {
         
         // Check outside temperature
         if (temperature < rule.temperatureOutside) {
+            self.log('Outside temperature too low  ('+temperature+'). Not closing');
             matchClose = false;
         }
         
@@ -242,6 +243,7 @@ BlindControl.prototype.processShadeRules = function() {
                 return;
             }
             if (insideTemperature < rule.temperatureInside) {
+                self.log('Inside temperature too low ('+insideTemperature+'). Not closing');
                 matchClose = false;
             }
         }
@@ -253,6 +255,7 @@ BlindControl.prototype.processShadeRules = function() {
                 return;
             }
             if (uvIndex < rule.sunUv) {
+                self.log('UV Index too low ('+uvIndex+'). Not closing');
                 matchClose = false;
             }
         }
@@ -260,6 +263,7 @@ BlindControl.prototype.processShadeRules = function() {
         // Check solar altitude
         if (sunAltitude < rule.altitude) {
             matchPosition = false;
+            self.log('Sun altitude too low ('+sunAltitude+'). Not closing');
         } else if (
                 (
                     rule.azimuthLeft < rule.azimuthRight && 
@@ -271,6 +275,7 @@ BlindControl.prototype.processShadeRules = function() {
                     sunAzimuth < rule.azimuthRight
                 )
             ) {
+            self.log('Sun azimuth autside of range ('+sunAzimuth+'). Not closing');
             matchPosition = false;
         }
         
