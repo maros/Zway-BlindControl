@@ -169,8 +169,8 @@ BlindControl.prototype.processInsulationRules = function() {
     var self = this;
     
     var rulesActive         = self.insulationDevice.get('metrics:active');
-    var outsideTemperature  = self.getSensorData('temperatureOutside');
-    var foreacastLow        = self.getSensorData('forecastLow') || outsideTemperature;
+    var outsideTemperature  = self.getSensorData(self.config.temperatureOutsideSensor);
+    var foreacastLow        = self.getSensorData(self.config.forecastLowSensor) || outsideTemperature;
     var temperature         = Math.min(outsideTemperature,foreacastLow);
     
     if (typeof(temperature) === 'undefined') {
@@ -214,10 +214,9 @@ BlindControl.prototype.processShadeRules = function() {
     var rulesActive         = self.shadeDevice.get('metrics:active');
     var sunAltitude         = self.getSunAltitude();
     var sunAzimuth          = self.getSunAzimuth();
-    var outsideTemperature  = self.getSensorData('temperatureOutside');
-    var forecastHigh        = self.getSensorData('forecastHigh') || outsideTemperature;
-    var insideTemperature   = self.getSensorData('temperatureInside');
-    var uvIndex             = self.getSensorData('uv');
+    var outsideTemperature  = self.getSensorData(self.config.temperatureOutsideSensor);
+    var forecastHigh        = self.getSensorData(self.config.forecastHighSensor) || outsideTemperature;
+    var uvIndex             = self.getSensorData(self.config.uvSensor);
     var temperature         = Math.max(outsideTemperature,forecastHigh);
     
     if (typeof(temperature) === 'undefined') {
@@ -226,9 +225,10 @@ BlindControl.prototype.processShadeRules = function() {
     }
     
     _.each(self.config.shadeRules,function(rule,ruleIndex) {
-        var matchClose      = true;
-        var matchPosition   = true;
-        var isActive        = rulesActive[ruleIndex] || false;
+        var matchClose          = true;
+        var matchPosition       = true;
+        var isActive            = rulesActive[ruleIndex] || false;
+        var insideTemperature   = self.getSensorData(rule.temperatureInsideSensor);
         
         // Check outside temperature
         if (temperature < rule.temperatureOutside) {
@@ -382,10 +382,9 @@ BlindControl.prototype.getSunAltitude = function() {
     ],'metrics:altitude');
 };
 
-BlindControl.prototype.getSensorData = function(type) {
+BlindControl.prototype.getSensorData = function(deviceId) {
     var self = this;
 
-    var deviceId = self.config[type+'Sensor'];
     if (typeof(deviceId) === 'undefined') {
         return;
     }

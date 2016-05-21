@@ -41,6 +41,7 @@
             "order" : 3
          },
          "insulationRules" : {
+            "label": "__rules_label__",
             "items" : {
                "fields" : {
                   "devices" : {
@@ -90,6 +91,7 @@
             "order" : 1
          },
          "shadeRules" : {
+            "label": "__rules_label__",
             "items" : {
                "fields" : {
                   "altitude" : {
@@ -136,18 +138,18 @@
                      "helper" : "__temperature_outside_shade_helper__",
                      "label" : "__temperature_outside_label__",
                      "order" : 1
-                  }
+                  },
+                 "temperatureInsideSensor" : {
+                    "datasource" : "namespaces",
+                    "field" : "devices",
+                    "label" : "__temperature_inside_sensor_label__",
+                    "optionLabels" : "namespaces:devices_sensorMultilevel:deviceName",
+                    "order" : 5,
+                    "type" : "select"
+                 }
                }
             },
             "order" : 2
-         },
-         "temperatureInsideSensor" : {
-            "datasource" : "namespaces",
-            "field" : "devices",
-            "label" : "__temperature_inside_sensor_label__",
-            "optionLabels" : "namespaces:devices_sensorMultilevel:deviceName",
-            "order" : 5,
-            "type" : "select"
          },
          "temperatureOutsideSensor" : {
             "datasource" : "namespaces",
@@ -294,18 +296,18 @@
                   },
                   "temperatureOutside" : {
                      "type" : "number"
+                  },
+                  "temperatureInsideSensor" : {
+                    "datasource" : "namespaces",
+                    "enum" : "namespaces:devices_sensorMultilevel:deviceId",
+                    "field" : "enum",
+                    "required" : true
                   }
                },
                "type" : "object"
             },
             "minItem" : 1,
             "type" : "array"
-         },
-         "temperatureInsideSensor" : {
-            "datasource" : "namespaces",
-            "enum" : "namespaces:devices_sensorMultilevel:deviceId",
-            "field" : "enum",
-            "required" : true
          },
          "temperatureOutsideSensor" : {
             "datasource" : "namespaces",
