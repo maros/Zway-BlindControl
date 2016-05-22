@@ -287,7 +287,6 @@
                      "type" : "number"
                   },
                   "sunUv" : {
-                     "maximum" : 13,
                      "minimum" : 0,
                      "type" : "number"
                   },

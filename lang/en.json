@@ -15,8 +15,8 @@
    "position_label" : "Blind position",
    "shade_active_helper" : "Use blinds for shading when outside-, inside-temperature and sun intensity rise above a certain level",
    "shade_active_label" : "Blinds shading",
-   "sun_uv_helper" : "If UV index rises above this level shading will be activated",
-   "sun_uv_label" : "UV level",
+   "sun_uv_helper" : "If UV index or solar intensity rises above this level shading will be activated",
+   "sun_uv_label" : "UV level or solar intensity",
    "temperature_inside_label" : "Inside temperature",
    "temperature_inside_sensor_label" : "Inside Temperature Sensor",
    "temperature_inside_shade_helper" : "If inside temperature rises above this level shading will be activated",
@@ -27,5 +27,5 @@
    "time_from_label" : "From",
    "time_placeholder" : "HH:MM",
    "time_to_label" : "To",
-   "uv_sensor_label" : "UV Sensor"
+   "uv_sensor_label" : "UV or Solar Intensity Sensor"
 }
