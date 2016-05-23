@@ -13,6 +13,7 @@
    "m_descr" : "Manage blinds for optimal insulation and shading. Shading rules can be defined for multiple zones using solar position, UV intensity index, in- and outside temperature. <br>Check <a href=https://github.com/maros/Zway-BlindControl/blob/master/README.md>github.com/maros/Zway-BlindControl</a> for detailed documentation.",
    "m_title" : "Blinds Control",
    "position_label" : "Blind position",
+   "rules_label" : "Zone rules",
    "shade_active_helper" : "Use blinds for shading when outside-, inside-temperature and sun intensity rise above a certain level",
    "shade_active_label" : "Blinds shading",
    "sun_uv_helper" : "If UV index or solar intensity rises above this level shading will be activated",

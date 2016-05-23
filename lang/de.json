@@ -13,6 +13,7 @@
    "m_descr" : "Steuert Jalousien für optimale Beschattung und Isolation abhängig von der Temperatur, Sonnenstand und Sonnenintensität.<br>Siehe <a href=https://github.com/maros/Zway-BlindControl/blob/master/README.md>github.com/maros/Zway-BlindControl</a> für detailliertere Dokumentation.",
    "m_title" : "Jalousien Steuerung",
    "position_label" : "Jalousien Position",
+   "rules_label" : "Zonen Regeln",
    "shade_active_helper" : "Aktiviert optimale Beschattung durch Jalousien abhängig vom Sonnenstand, Sonnenintensitär, Innen- und Aussentemperaruren.",
    "shade_active_label" : "Jalousien Beschattung",
    "sun_uv_helper" : "Wenn der UV Index oder die Sonneninensität über den angegebenen Wert steigt wird die Beschattung aktiviert",
