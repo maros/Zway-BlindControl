@@ -1,3 +1,16 @@
+1.06 2016 May 31, Tue
+    * Add translation
+    * Also accept solar intensity device
+    * Fix azimuth comparison
+    * One temperature sensor per zone
+    * Add verbose logging
+    * Improve texts
+    * Update module title and description
+    * Fix wrong variable name
+    * Set defaults
+    * Do not close blinds shortly before period end
+    * Update probeType
+
 1.05 2016 Apr 20, Wed
     * Fix time fields in module.json
     * Update readme

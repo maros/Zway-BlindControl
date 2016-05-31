@@ -3,9 +3,9 @@
    "category" : "complex_applications",
    "defaults" : {
       "description" : "__m_descr__",
-      "title" : "__m_title__",
-      "insulationRules": [],
-      "shadeRules": []
+      "insulationRules" : [],
+      "shadeRules" : [],
+      "title" : "__m_title__"
    },
    "dependencies" : [
       "Astronomy",
@@ -41,7 +41,6 @@
             "order" : 3
          },
          "insulationRules" : {
-            "label": "__rules_label__",
             "items" : {
                "fields" : {
                   "devices" : {
@@ -83,6 +82,7 @@
                   }
                }
             },
+            "label" : "__rules_label__",
             "order" : 4
          },
          "shadeActive" : {
@@ -91,7 +91,6 @@
             "order" : 1
          },
          "shadeRules" : {
-            "label": "__rules_label__",
             "items" : {
                "fields" : {
                   "altitude" : {
@@ -134,21 +133,22 @@
                      "label" : "__temperature_inside_label__",
                      "order" : 2
                   },
+                  "temperatureInsideSensor" : {
+                     "datasource" : "namespaces",
+                     "field" : "devices",
+                     "label" : "__temperature_inside_sensor_label__",
+                     "optionLabels" : "namespaces:devices_sensorMultilevel:deviceName",
+                     "order" : 5,
+                     "type" : "select"
+                  },
                   "temperatureOutside" : {
                      "helper" : "__temperature_outside_shade_helper__",
                      "label" : "__temperature_outside_label__",
                      "order" : 1
-                  },
-                 "temperatureInsideSensor" : {
-                    "datasource" : "namespaces",
-                    "field" : "devices",
-                    "label" : "__temperature_inside_sensor_label__",
-                    "optionLabels" : "namespaces:devices_sensorMultilevel:deviceName",
-                    "order" : 5,
-                    "type" : "select"
-                 }
+                  }
                }
             },
+            "label" : "__rules_label__",
             "order" : 2
          },
          "temperatureOutsideSensor" : {
@@ -194,11 +194,11 @@
             "type" : "boolean"
          },
          "insulationRules" : {
-            "dependencies" : "insulationActive",
             "defaults" : {
-                "position": 0,
-                "temperatureOutside": 0
+               "position" : 0,
+               "temperatureOutside" : 0
             },
+            "dependencies" : "insulationActive",
             "items" : {
                "properties" : {
                   "devices" : {
@@ -242,12 +242,12 @@
             "type" : "boolean"
          },
          "shadeRules" : {
-            "dependencies" : "shadeActive",
             "defaults" : {
-                "position": 0,
-                "temperatureInside": 24,
-                "temperatureOutside": 24
+               "position" : 0,
+               "temperatureInside" : 24,
+               "temperatureOutside" : 24
             },
+            "dependencies" : "shadeActive",
             "items" : {
                "properties" : {
                   "altitude" : {
@@ -293,14 +293,14 @@
                   "temperatureInside" : {
                      "type" : "number"
                   },
+                  "temperatureInsideSensor" : {
+                     "datasource" : "namespaces",
+                     "enum" : "namespaces:devices_sensorMultilevel:deviceId",
+                     "field" : "enum",
+                     "required" : true
+                  },
                   "temperatureOutside" : {
                      "type" : "number"
-                  },
-                  "temperatureInsideSensor" : {
-                    "datasource" : "namespaces",
-                    "enum" : "namespaces:devices_sensorMultilevel:deviceId",
-                    "field" : "enum",
-                    "required" : true
                   }
                },
                "type" : "object"
@@ -324,5 +324,5 @@
       "type" : "object"
    },
    "singleton" : false,
-   "version" : 1.05
+   "version" : "1.06"
 }
