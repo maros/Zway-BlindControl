@@ -4,7 +4,7 @@ Manages blinds and shades for optimal shading when hot, and insulation when
 cold. A virtual device will be created for each selected operation mode,
 that can disable blind control actions.
 
-It is possible to create multiple rules that manage several devices (eg. in 
+It is possible to create multiple rules that manage several devices (eg. in
 different rooms). Rules can be created based on
 
 * Inside temperature
@@ -17,17 +17,17 @@ The module supports two operation modes: Shading and insulation. For shading
 blinds will be closed once all preconditions (in- and outside temperature and
 solar intensity) match, and the sun shines into a particular window
 (calculated based on altitude and azimuth). The blinds will stay closed until
-the sun moves out of the selected area (regardless of the temperature) - 
-either because it set below the selected altitude, or because it does not 
+the sun moves out of the selected area (regardless of the temperature) -
+either because it set below the selected altitude, or because it does not
 match the selected azimuth angles anymore.
 
-In insulation mode the blinds will be closed if the temperature and the 
-altitude fall below a certain level. Blinds will be reopened once the solar 
+In insulation mode the blinds will be closed if the temperature and the
+altitude fall below a certain level. Blinds will be reopened once the solar
 altitude rises above the selected level.
 
 # Configuration
 
-This module depends on the Astronomy module from 
+This module depends on the Astronomy module from
 https://github.com/maros/Zway-Astronomy for calculating the solar azimuth
 ana altitude.
 
@@ -57,7 +57,7 @@ be activated (optional).
 
 ## shade_rules.azimuth_left, shade_rules.azimuth_right
 
-Select two azimuth levels (0-360°). Rule will be activated if sun is between 
+Select two azimuth levels (0-360°). Rule will be activated if sun is between
 these two angles.
 
 ## shade_rules.altitude
@@ -107,13 +107,13 @@ module ( https://github.com/maros/Zway-WeatherUnderground )
 ## temperature_outside_sensor
 
 Device that measures the outside temperature. Can be either a physical device
-or a virtual device created by any weather module 
+or a virtual device created by any weather module
 (eg. https://github.com/maros/Zway-WeatherUnderground )
 
 ## temperature_inside_sensor
 
 Device that measures the inside temperature. If you want to use the average
-temperature of multiple sensors, you can use the SummarySensor module 
+temperature of multiple sensors, you can use the SummarySensor module
 ( https://github.com/maros/Zway-SummarySensor )
 
 # Virtual Devices
@@ -126,23 +126,23 @@ rules are enabled in the configuration.
 
 No events are emitted.
 
-Blind controller always listens to security.smoke.alarm and 
-security.smoke.cancel events (these events are usually emitted by 
-( https://github.com/maros/Zway-SecurityZone ). In case of a smoke alarm all 
+Blind controller always listens to security.smoke.alarm and
+security.smoke.cancel events (these events are usually emitted by
+( https://github.com/maros/Zway-SecurityZone ). In case of a smoke alarm all
 blinds managed by the controller are automatically opened.
 
 # Installation
 
-Make sure that the Astronomy module and BaseModule is installed prior to 
-installing this module ( https://github.com/maros/Zway-Astronomy and 
+Make sure that the Astronomy module and BaseModule is installed prior to
+installing this module ( https://github.com/maros/Zway-Astronomy and
 https://github.com/maros/Zway-BaseModule)
 
 The prefered way of installing this module is via the "Zwave.me App Store"
-available in 2.2.0 and higher. For stable module releases no access token is 
-required. If you want to test the latest pre-releases use 'k1_beta' as 
+available in 2.2.0 and higher. For stable module releases no access token is
+required. If you want to test the latest pre-releases use 'k1_beta' as
 app store access token.
 
-For developers and users of older Zway versions installation via git is 
+For developers and users of older Zway versions installation via git is
 recommended.
 
 ```shell
@@ -166,7 +166,7 @@ git checkout -b master --track origin/master
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or any 
+the Free Software Foundation, either version 3 of the License, or any
 later version.
 
 This program is distributed in the hope that it will be useful,
