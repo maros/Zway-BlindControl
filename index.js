@@ -183,8 +183,8 @@ BlindControl.prototype.processInsulationRules = function() {
         var timeFrom        = self.parseTime(rule.timeFrom);
         var timeTo          = self.parseTime(rule.timeTo);
         var inPeriod        = self.checkPeriod(timeFrom,timeTo);
-        timeTo.setSeconds((timeFrom-timeTo)/2);
-        var inPeriodStart   = self.checkPeriod(timeFrom,timeTo);
+        var timeLimit       = new Date(timeFrom.getTime() + (timeFrom.getTime() - timeTo.getTime()) / 2);
+        var inPeriodStart   = self.checkPeriod(timeFrom,timeLimit);
 
         // Check sun altitude & temp
         if (temperature < rule.temperatureOutside
@@ -200,7 +200,7 @@ BlindControl.prototype.processInsulationRules = function() {
             rulesActive[ruleIndex] = false;
             self.moveDevices(rule.devices,255);
         } else {
-            self.log('Nothing to do. active:'+isActive+' period:'+inPeriod+' temp:'+temperature);
+            self.log('Nothing to do. active:'+isActive+' period:'+inPeriod+' ('+inPeriodStart+') temp:'+temperature);
             return;
         }
 
