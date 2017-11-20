@@ -185,9 +185,10 @@ BlindControl.prototype.processInsulationRules = function() {
         var inPeriod        = self.checkPeriod(timeFrom,timeTo);
         var timeLimit       = new Date(timeFrom.getTime() + (timeFrom.getTime() - timeTo.getTime()) / 2);
         var inPeriodStart   = self.checkPeriod(timeFrom,timeLimit);
+        var inTemperature   = temperature < rule.temperatureOutside;
 
         // Check sun altitude & temp
-        if (temperature < rule.temperatureOutside
+        if (inTemperature
             && inPeriod === true
             && isActive === false
             && inPeriodStart === true ) {
@@ -200,7 +201,7 @@ BlindControl.prototype.processInsulationRules = function() {
             rulesActive[ruleIndex] = false;
             self.moveDevices(rule.devices,255);
         } else {
-            self.log('Nothing to do. active:'+isActive+' period:'+inPeriod+' ('+inPeriodStart+') temp:'+temperature);
+            self.log('Nothing to do. temp: '+inTemperature+' active:'+isActive+' period:'+inPeriod+' ('+inPeriodStart+')');
             return;
         }
 
@@ -348,13 +349,12 @@ BlindControl.prototype.moveDevices = function(devices,targetPos) {
         if (targetPos >= 99 && (devicePos >= 99 || deviceAuto === false)) {
             self.log('Ignoring device open. Already at '+devicePos+' or not auto');
             if (deviceAuto === true) {
-                // TODO reset auto?
-                //deviceObject.set('metrics:auto',false);
+                deviceObject.set('metrics:auto',false);
             }
             return;
         // Close
         } else if  (targetPos < 99 && (devicePos < 99 || deviceAuto === true)) {
-            self.log('Ignoring device close. Already at '+devicePos+' or aleray auto');
+            self.log('Ignoring device close. Already at '+devicePos+' or auto');
             return;
         }
 
