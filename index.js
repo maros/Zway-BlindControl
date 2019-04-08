@@ -344,7 +344,7 @@ BlindControl.prototype.moveDevices = function(devices,targetPos) {
     self.processDeviceList(devices,function(deviceObject) {
         var deviceAuto  = deviceObject.get('metrics:auto');
         var devicePos   = deviceObject.get('metrics:target');
-        if (typeof(devicePos) === 'undefined') {
+        if (typeof(devicePos) === 'undefined' || devicePos === null) {
             devicePos       = deviceObject.get('metrics:level');
         }
 
