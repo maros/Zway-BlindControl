@@ -66,7 +66,7 @@ BlindControl.prototype.init = function (config) {
     self.controller.on('security.smoke.stop',self.alarmCallback);
 
     self.interval = setInterval(_.bind(self.checkConditions,self),1000*60*3);
-    setTimeout(_.bind(self.initCallback,self),1000*60);
+    setTimeout(_.bind(self.initCallback,self),1000*60*1);
 };
 
 BlindControl.prototype.stop = function () {
@@ -97,22 +97,26 @@ BlindControl.prototype.initCallback = function() {
     var self = this;
 
     var devices = [];
-    _.each(self.config.insulationRules,function(rule) {
-        devices.push(rule.devices);
-    });
-    _.each(self.config.shadeRules,function(rule) {
-        devices.push(rule.devices);
+    _.each(['insulation','shade'],function(type) {
+        if (self.config[type+'Active'] === true) {
+            var rules = self.config[type+'Rules'];
+            _.each(rules,function(rule) {
+                _.each(rule.devices,function(device) {
+                    devices.push(device);
+                });
+            });
+        }
     });
 
-    self.allDevices = _.uniq(_.flatten(devices));
-
+    self.allDevices = _.uniq(devices);
+    console.log(self.allDevices);
     self.processDeviceList(self.allDevices,function(deviceObject) {
         var deviceAuto  = deviceObject.get('metrics:auto');
         if (typeof(deviceAuto) === 'undefined') {
             deviceObject.set('metrics:auto',false);
         } else if (deviceAuto === true) {
             var deviceLevel = deviceObject.get('metrics:level');
-            if (deviceLevel > 99) {
+            if (deviceLevel >= 99) {
                 deviceObject.set('metrics:auto',false);
             }
         }
